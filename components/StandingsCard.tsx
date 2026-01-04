@@ -31,7 +31,10 @@ export default function StandingsCard({ standings }: StandingsCardProps) {
       className="glass-strong rounded-2xl p-6 h-full"
     >
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-2xl font-display font-bold">Driver Standings</h3>
+        <div>
+          <h3 className="text-2xl font-display font-bold">Driver Standings</h3>
+          <p className="text-xs text-white/40 mt-1">2025 Final Results</p>
+        </div>
         <TrendingUp className="text-f1-red" size={24} />
       </div>
 

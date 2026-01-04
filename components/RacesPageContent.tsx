@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Calendar, MapPin, Trophy, Flag } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import type { Race } from "@/lib/types";
+import { formatRaceDate, getRaceDateObject } from "@/lib/date-utils";
 
 interface RacesPageContentProps {
   raceSchedule: Race[];
@@ -18,9 +19,17 @@ export default function RacesPageContent({
   const pastRaces: Race[] = [];
   const upcomingRaces: Race[] = [];
 
+  // Categorize races into past and upcoming
   raceSchedule.forEach((race) => {
-    const raceDate = new Date(`${race.date}T${race.time || "14:00:00"}Z`);
-    if (raceDate < now) {
+    const raceDateObj = getRaceDateObject(race.date, race.time);
+    
+    if (!raceDateObj) {
+      // If date is invalid, treat as upcoming
+      upcomingRaces.push(race);
+      return;
+    }
+
+    if (raceDateObj < now) {
       pastRaces.push(race);
     } else {
       upcomingRaces.push(race);
@@ -29,14 +38,16 @@ export default function RacesPageContent({
 
   // Sort past races by date (newest first) and upcoming by date (oldest first)
   pastRaces.sort((a, b) => {
-    const dateA = new Date(`${a.date}T${a.time || "14:00:00"}Z`);
-    const dateB = new Date(`${b.date}T${b.time || "14:00:00"}Z`);
+    const dateA = getRaceDateObject(a.date, a.time);
+    const dateB = getRaceDateObject(b.date, b.time);
+    if (!dateA || !dateB) return 0;
     return dateB.getTime() - dateA.getTime();
   });
 
   upcomingRaces.sort((a, b) => {
-    const dateA = new Date(`${a.date}T${a.time || "14:00:00"}Z`);
-    const dateB = new Date(`${b.date}T${b.time || "14:00:00"}Z`);
+    const dateA = getRaceDateObject(a.date, a.time);
+    const dateB = getRaceDateObject(b.date, b.time);
+    if (!dateA || !dateB) return 0;
     return dateA.getTime() - dateB.getTime();
   });
 
@@ -60,9 +71,10 @@ export default function RacesPageContent({
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {allRaces.map((race, index) => {
-            const raceDate = new Date(`${race.date}T${race.time || "14:00:00"}Z`);
-            const isPast = raceDate < now;
+            const raceDateObj = getRaceDateObject(race.date, race.time);
+            const isPast = raceDateObj ? raceDateObj < now : false;
             const winner = winnersMap.get(race.raceName);
+            const formattedDateTime = formatRaceDate(race.date, race.time);
 
             return (
               <motion.div
@@ -83,7 +95,11 @@ export default function RacesPageContent({
                       Round {race.round}
                     </span>
                   </div>
-                  {!isPast && (
+                  {isPast ? (
+                    <span className="px-3 py-1 rounded-full bg-white/10 text-white/60 text-xs font-semibold uppercase tracking-wider border border-white/20">
+                      Completed
+                    </span>
+                  ) : (
                     <span className="px-3 py-1 rounded-full bg-f1-red/20 text-f1-red text-xs font-semibold uppercase tracking-wider">
                       Upcoming
                     </span>
@@ -102,21 +118,7 @@ export default function RacesPageContent({
 
                   <div className="flex items-center gap-2 text-white/60">
                     <Calendar size={16} />
-                    <span className="text-sm">
-                      {raceDate.toLocaleDateString("en-US", {
-                        month: "long",
-                        day: "numeric",
-                        year: "numeric",
-                      })}
-                    </span>
-                    <span className="text-white/40">•</span>
-                    <span className="text-sm">
-                      {raceDate.toLocaleTimeString("en-US", {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                        hour12: false,
-                      })}
-                    </span>
+                    <span className="text-sm">{formattedDateTime}</span>
                   </div>
 
                   {isPast && winner && (
@@ -142,4 +144,3 @@ export default function RacesPageContent({
     </main>
   );
 }
-

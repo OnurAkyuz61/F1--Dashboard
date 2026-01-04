@@ -7,16 +7,14 @@ import {
   getNextRace,
   getDriverStandings,
   getLastRaceResults,
-  getCircuitInfo,
 } from "@/lib/api";
 
 export default async function Home() {
   // Fetch all data in parallel
-  const [nextRace, driverStandings, lastRace, circuitInfo] = await Promise.all([
+  const [nextRace, driverStandings, lastRace] = await Promise.all([
     getNextRace(),
     getDriverStandings(),
     getLastRaceResults(),
-    getCircuitInfo(),
   ]);
 
   return (
@@ -38,7 +36,14 @@ export default async function Home() {
 
           {/* Circuit Info - Takes 1 column */}
           <div className="lg:col-span-1">
-            <CircuitInfo circuitInfo={circuitInfo} />
+            {nextRace ? (
+              <CircuitInfo
+                circuitName={nextRace.circuitName}
+                country={nextRace.country}
+              />
+            ) : (
+              <CircuitInfo circuitName="TBA" country="TBA" />
+            )}
           </div>
 
           {/* Recent Result - Takes full width on large screens */}

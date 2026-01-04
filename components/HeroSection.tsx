@@ -16,7 +16,18 @@ export default function HeroSection({ nextRace }: HeroSectionProps) {
     if (!nextRace) return;
     
     const calculateCountdown = () => {
-      const raceDate = new Date(`${nextRace.date}T${nextRace.time || "14:00:00"}Z`);
+      // Combine date and time into ISO string
+      const raceTime = nextRace.time || "14:00:00Z";
+      const raceDateStr = `${nextRace.date}T${raceTime}`;
+      const raceDate = new Date(raceDateStr);
+
+      // Validate date
+      if (isNaN(raceDate.getTime())) {
+        console.error(`[HeroSection] Invalid date: ${raceDateStr}`);
+        setCountdown({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+        return;
+      }
+
       const now = new Date();
       const diff = raceDate.getTime() - now.getTime();
 
@@ -65,7 +76,30 @@ export default function HeroSection({ nextRace }: HeroSectionProps) {
     );
   }
 
-  const raceDate = new Date(`${nextRace.date}T${nextRace.time || "14:00:00"}Z`);
+  // Combine date and time into ISO string
+  const raceTime = nextRace.time || "14:00:00Z";
+  const raceDateStr = `${nextRace.date}T${raceTime}`;
+  const raceDate = new Date(raceDateStr);
+
+  // Validate date before rendering
+  if (isNaN(raceDate.getTime())) {
+    return (
+      <motion.section
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.8 }}
+        className="relative min-h-[600px] flex items-center justify-center overflow-hidden rounded-2xl"
+      >
+        <div className="absolute inset-0 bg-gradient-to-br from-f1-red/20 via-background to-background" />
+        <div className="relative z-10 text-center">
+          <h2 className="text-5xl md:text-7xl font-display font-bold mb-4 bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent">
+            RACE DATE TBA
+          </h2>
+          <p className="text-xl text-white/60">Race information will be available soon</p>
+        </div>
+      </motion.section>
+    );
+  }
 
   return (
     <motion.section
@@ -100,12 +134,17 @@ export default function HeroSection({ nextRace }: HeroSectionProps) {
             NEXT RACE
           </motion.h2>
           
-          <div className="flex items-center justify-center gap-4 mb-8 text-white/80">
+          <div className="flex items-center justify-center gap-4 mb-4 text-white/80">
             <MapPin size={20} />
             <p className="text-xl font-medium">{nextRace.circuitName}</p>
             <span className="text-white/40">•</span>
             <p className="text-lg">{nextRace.country}</p>
           </div>
+          {nextRace.round && (
+            <div className="text-sm text-white/60 mb-8">
+              Round {nextRace.round}
+            </div>
+          )}
         </motion.div>
 
         <motion.div

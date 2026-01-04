@@ -26,18 +26,18 @@ export const DRIVER_IMAGES: Record<string, string> = {
 };
 
 // Team Logos Mapping
-// Map constructorId from API to logo URL
+// Map constructorId from API to logo URL (using local files from public/teams)
 export const TEAM_LOGOS: Record<string, string> = {
-  red_bull: "https://www.formula1.com/content/dam/fom-website/teams/2024/red-bull-racing-logo.png",
-  ferrari: "https://www.formula1.com/content/dam/fom-website/teams/2024/ferrari-logo.png",
-  mercedes: "https://www.formula1.com/content/dam/fom-website/teams/2024/mercedes-logo.png",
-  mclaren: "https://www.formula1.com/content/dam/fom-website/teams/2024/mclaren-logo.png",
-  alpine: "https://www.formula1.com/content/dam/fom-website/teams/2024/alpine-logo.png",
-  aston_martin: "https://www.formula1.com/content/dam/fom-website/teams/2024/aston-martin-logo.png",
-  rb: "https://www.formula1.com/content/dam/fom-website/teams/2024/rb-logo.png",
-  haas: "https://www.formula1.com/content/dam/fom-website/teams/2024/haas-logo.png",
-  williams: "https://www.formula1.com/content/dam/fom-website/teams/2024/williams-logo.png",
-  sauber: "https://www.formula1.com/content/dam/fom-website/teams/2024/sauber-logo.png",
+  red_bull: "/teams/redbull-logo-svgrepo-com.svg",
+  ferrari: "/teams/ferrari-emblem-1-logo-svgrepo-com.svg",
+  mercedes: "/teams/mercedes-me-svgrepo-com.svg",
+  mclaren: "/teams/mclaren-alt-svgrepo-com.svg",
+  alpine: "/teams/alpine-logo.svg", // Add this file if needed
+  aston_martin: "/teams/aston-martin-alt-svgrepo-com.svg",
+  rb: "/teams/rb-logo.svg", // Add this file if needed
+  haas: "/teams/haas-logo.svg", // Add this file if needed
+  williams: "/teams/williams-logo.svg", // Add this file if needed
+  sauber: "/teams/sauber-logo.svg", // Add this file if needed
 };
 
 // Team Colors Mapping

@@ -168,10 +168,13 @@ export async function getConstructorStandings(): Promise<ConstructorStanding[]> 
 
 /**
  * Get the next race from the current season (2026)
+ * Fetches full schedule and finds the first future race
  * Returns null if no race is found
  */
 export async function getNextRace(): Promise<NextRace | null> {
-  const url = `${ERGAST_API}/${CURRENT_SEASON}/next.json`;
+  const url = `${ERGAST_API}/${CURRENT_SEASON}.json`;
+  
+  console.log(`[getNextRace] Fetching from: ${url}`);
   
   try {
     const response = await fetch(url, {
@@ -186,9 +189,48 @@ export async function getNextRace(): Promise<NextRace | null> {
     }
 
     const data = await response.json();
-    return transformErgastRace(data);
+    console.log(`[getNextRace] API response received, races count:`, data?.MRData?.RaceTable?.Races?.length || 0);
+
+    if (!data?.MRData?.RaceTable?.Races) {
+      console.warn(`[getNextRace] No races found in response`);
+      return null;
+    }
+
+    const races = data.MRData.RaceTable.Races;
+    const currentDate = new Date();
+
+    // Find the first race in the future
+    for (const race of races) {
+      // Combine date and time into ISO string
+      const raceTime = race.time || "14:00:00Z";
+      const raceDateStr = `${race.date}T${raceTime}`;
+      const raceDate = new Date(raceDateStr);
+
+      console.log(`[getNextRace] Checking race: ${race.raceName}, date: ${raceDateStr}, parsed: ${raceDate.toISOString()}`);
+
+      if (isNaN(raceDate.getTime())) {
+        console.warn(`[getNextRace] Invalid date for race: ${race.raceName}, date string: ${raceDateStr}`);
+        continue;
+      }
+
+      if (raceDate > currentDate) {
+        console.log(`[getNextRace] Found next race: ${race.raceName} on ${raceDateStr}`);
+        
+        return {
+          date: race.date,
+          time: race.time || undefined,
+          circuitName: race.Circuit.circuitName,
+          country: race.Circuit.Location.country,
+          raceName: race.raceName,
+          round: parseInt(race.round, 10),
+        };
+      }
+    }
+
+    console.warn(`[getNextRace] No future race found in ${races.length} races`);
+    return null;
   } catch (error) {
-    console.warn(`API fetch failed for ${url}:`, error);
+    console.error(`[getNextRace] API fetch failed for ${url}:`, error);
     return null;
   }
 }

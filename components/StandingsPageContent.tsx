@@ -36,8 +36,13 @@ export default function StandingsPageContent({
           transition={{ duration: 0.5 }}
           className="mb-8"
         >
-          <h1 className="text-5xl font-display font-bold mb-2">Standings</h1>
-          <p className="text-white/60">Current season driver and constructor rankings</p>
+          <div className="flex items-center gap-3 mb-2">
+            <h1 className="text-5xl font-display font-bold">Standings</h1>
+            <span className="px-3 py-1 rounded-full bg-white/10 text-white/60 text-xs font-semibold uppercase tracking-wider border border-white/20">
+              2025 Season
+            </span>
+          </div>
+          <p className="text-white/60">2025 Final Results - Driver and Constructor Rankings</p>
         </motion.div>
 
         <Tabs defaultValue="drivers">
@@ -61,6 +66,12 @@ export default function StandingsPageContent({
           </TabsList>
 
           <TabsContent value="drivers" isActive={activeTab === "drivers"}>
+            {/* Season Context Header */}
+            <div className="mb-6 pb-4 border-b border-white/10">
+              <h2 className="text-2xl font-display font-bold mb-1">Driver Standings</h2>
+              <p className="text-xs text-white/40">2025 Final Results</p>
+            </div>
+            
             {/* Desktop: Grid Layout */}
             <div className="hidden md:grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {driverStandings.map((driver, index) => (
@@ -110,6 +121,12 @@ export default function StandingsPageContent({
           </TabsContent>
 
           <TabsContent value="constructors" isActive={activeTab === "constructors"}>
+            {/* Season Context Header */}
+            <div className="mb-6 pb-4 border-b border-white/10">
+              <h2 className="text-2xl font-display font-bold mb-1">Constructor Standings</h2>
+              <p className="text-xs text-white/40">2025 Final Results</p>
+            </div>
+            
             <div className="glass-strong rounded-2xl p-6 overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full">
