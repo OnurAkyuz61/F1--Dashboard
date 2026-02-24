@@ -103,7 +103,7 @@ export default function StatsPageContent({
             <div className="text-xl font-display font-bold mb-1">
               {topTeam?.Constructor.name}
             </div>
-            <div className="text-sm text-white/60">Constructors' Champion</div>
+            <div className="text-sm text-white/60">Constructors&apos; Champion</div>
           </motion.div>
         </div>
 
