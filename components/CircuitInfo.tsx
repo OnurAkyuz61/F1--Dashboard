@@ -9,9 +9,15 @@ import { getTrackWeather, type WeatherData } from "@/lib/weather";
 interface CircuitInfoProps {
   circuitName: string;
   country: string;
+  /** In modal: compact grid without card wrapper and without Circuit/Country rows */
+  variant?: "card" | "compact";
 }
 
-export default function CircuitInfo({ circuitName, country }: CircuitInfoProps) {
+export default function CircuitInfo({
+  circuitName,
+  country,
+  variant = "card",
+}: CircuitInfoProps) {
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [weatherLoading, setWeatherLoading] = useState(true);
   const [weatherError, setWeatherError] = useState(false);
@@ -53,20 +59,27 @@ export default function CircuitInfo({ circuitName, country }: CircuitInfoProps) 
   }, [circuitData]);
 
   const infoItems = [
-    {
-      icon: <MapPin size={20} />,
-      label: "Circuit",
-      value: circuitName,
-    },
+    ...(variant === "card"
+      ? [
+          {
+            icon: <MapPin size={20} />,
+            label: "Circuit",
+            value: circuitName,
+            isLoading: false,
+          },
+        ]
+      : []),
     {
       icon: <Gauge size={20} />,
       label: "Length",
       value: circuitData?.length || "TBA",
+      isLoading: false,
     },
     {
       icon: <RotateCcw size={20} />,
       label: "Laps",
       value: circuitData?.laps ? `${circuitData.laps}` : "TBA",
+      isLoading: false,
     },
     {
       icon: <Cloud size={20} />,
@@ -91,6 +104,43 @@ export default function CircuitInfo({ circuitName, country }: CircuitInfoProps) 
       isLoading: weatherLoading,
     },
   ];
+
+  if (variant === "compact") {
+    return (
+      <div className="space-y-2">
+        <div className="grid grid-cols-2 gap-2">
+          {infoItems.map((item) => (
+            <div
+              key={item.label}
+              className="flex items-center justify-between rounded-lg bg-white/5 border border-white/10 px-3 py-2.5"
+            >
+              <span className="text-xs uppercase tracking-wider text-white/50 flex items-center gap-2">
+                {item.icon}
+                {item.label}
+              </span>
+              <span className="font-semibold text-sm flex items-center gap-1.5">
+                {item.isLoading ? (
+                  <Loader2 size={14} className="animate-spin text-f1-red" />
+                ) : (
+                  item.value
+                )}
+              </span>
+            </div>
+          ))}
+        </div>
+        {circuitData?.record && (
+          <div className="rounded-lg bg-f1-red/10 border border-f1-red/30 px-3 py-2.5">
+            <span className="text-xs uppercase tracking-wider text-f1-red/80">
+              Lap record
+            </span>
+            <p className="text-sm font-semibold text-white mt-0.5">
+              {circuitData.record}
+            </p>
+          </div>
+        )}
+      </div>
+    );
+  }
 
   return (
     <motion.div

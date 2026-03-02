@@ -1,8 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Calendar, MapPin, Trophy, Flag } from "lucide-react";
 import Navbar from "@/components/Navbar";
+import CircuitModal from "@/components/CircuitModal";
 import type { Race } from "@/lib/types";
 import { formatRaceDate, getRaceDateObject } from "@/lib/date-utils";
 
@@ -52,6 +54,7 @@ export default function RacesPageContent({
   });
 
   const allRaces = [...pastRaces, ...upcomingRaces];
+  const [selectedRace, setSelectedRace] = useState<Race | null>(null);
 
   return (
     <main className="min-h-screen">
@@ -82,8 +85,17 @@ export default function RacesPageContent({
                 initial={{ y: 30, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: index * 0.05, duration: 0.5 }}
+                role="button"
+                tabIndex={0}
+                onClick={() => setSelectedRace(race)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    setSelectedRace(race);
+                  }
+                }}
                 className={`
-                  glass-strong rounded-2xl p-6
+                  glass-strong rounded-2xl p-6 cursor-pointer
                   ${isPast ? "opacity-75" : ""}
                   hover:scale-105 transition-transform
                 `}
@@ -141,6 +153,11 @@ export default function RacesPageContent({
           })}
         </div>
       </div>
+
+      <CircuitModal
+        race={selectedRace}
+        onClose={() => setSelectedRace(null)}
+      />
     </main>
   );
 }

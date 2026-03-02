@@ -98,6 +98,24 @@ export const CIRCUIT_DATA: Record<string, CircuitData> = {
     latitude: 52.0786,
     longitude: -1.0169,
   },
+
+  // Chinese Grand Prix - Shanghai International Circuit
+  shanghai: {
+    length: "5.451 km",
+    laps: 56,
+    record: "1:32.238 (Michael Schumacher, 2004)",
+    latitude: 31.3389,
+    longitude: 121.2203,
+  },
+
+  // Japanese Grand Prix - Suzuka Circuit
+  suzuka: {
+    length: "5.807 km",
+    laps: 53,
+    record: "1:30.983 (Max Verstappen, 2023)",
+    latitude: 34.8431,
+    longitude: 136.541,
+  },
 };
 
 // Helper function to get circuit ID from circuit name
@@ -113,6 +131,8 @@ export function getCircuitId(circuitName: string): string | null {
     "Circuit Gilles Villeneuve": "villeneuve",
     "Red Bull Ring": "red_bull_ring",
     "Silverstone Circuit": "silverstone",
+    "Shanghai International Circuit": "shanghai",
+    "Suzuka Circuit": "suzuka",
   };
 
   // Try exact match
