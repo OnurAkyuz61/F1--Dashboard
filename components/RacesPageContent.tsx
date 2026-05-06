@@ -18,42 +18,7 @@ export default function RacesPageContent({
   winnersByRaceName,
 }: RacesPageContentProps) {
   const now = new Date();
-  const pastRaces: Race[] = [];
-  const upcomingRaces: Race[] = [];
-
-  // Categorize races into past and upcoming
-  raceSchedule.forEach((race) => {
-    const raceDateObj = getRaceDateObject(race.date, race.time);
-    
-    if (!raceDateObj) {
-      // If date is invalid, treat as upcoming
-      upcomingRaces.push(race);
-      return;
-    }
-
-    if (raceDateObj < now) {
-      pastRaces.push(race);
-    } else {
-      upcomingRaces.push(race);
-    }
-  });
-
-  // Sort past races by date (newest first) and upcoming by date (oldest first)
-  pastRaces.sort((a, b) => {
-    const dateA = getRaceDateObject(a.date, a.time);
-    const dateB = getRaceDateObject(b.date, b.time);
-    if (!dateA || !dateB) return 0;
-    return dateB.getTime() - dateA.getTime();
-  });
-
-  upcomingRaces.sort((a, b) => {
-    const dateA = getRaceDateObject(a.date, a.time);
-    const dateB = getRaceDateObject(b.date, b.time);
-    if (!dateA || !dateB) return 0;
-    return dateA.getTime() - dateB.getTime();
-  });
-
-  const allRaces = [...pastRaces, ...upcomingRaces];
+  const allRaces = [...raceSchedule].sort((a, b) => a.round - b.round);
   const [selectedRace, setSelectedRace] = useState<Race | null>(null);
 
   return (

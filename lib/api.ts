@@ -295,7 +295,7 @@ export async function getLastRaceResults(): Promise<RaceResult | null> {
  * Key is race name, value is winner full name.
  */
 export async function getCompletedRaceWinners(): Promise<Record<string, string>> {
-  const url = `${ERGAST_API}/current/results.json`;
+  const url = `${ERGAST_API}/current/results/1.json`;
 
   try {
     const response = await fetch(url, {
@@ -319,9 +319,7 @@ export async function getCompletedRaceWinners(): Promise<Record<string, string>>
     const winners: Record<string, string> = {};
 
     for (const race of races) {
-      const winner = race?.Results?.find(
-        (result: any) => parseInt(result?.position, 10) === 1
-      );
+      const winner = race?.Results?.[0];
 
       if (!winner?.Driver || !race?.raceName) {
         continue;
