@@ -291,6 +291,54 @@ export async function getLastRaceResults(): Promise<RaceResult | null> {
 }
 
 /**
+ * Winners for all completed races in the current season.
+ * Key is race name, value is winner full name.
+ */
+export async function getCompletedRaceWinners(): Promise<Record<string, string>> {
+  const url = `${ERGAST_API}/current/results.json`;
+
+  try {
+    const response = await fetch(url, {
+      next: { revalidate: REVALIDATE_SECONDS },
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    const races = data?.MRData?.RaceTable?.Races;
+
+    if (!Array.isArray(races)) {
+      return {};
+    }
+
+    const winners: Record<string, string> = {};
+
+    for (const race of races) {
+      const winner = race?.Results?.find(
+        (result: any) => parseInt(result?.position, 10) === 1
+      );
+
+      if (!winner?.Driver || !race?.raceName) {
+        continue;
+      }
+
+      winners[race.raceName] =
+        `${winner.Driver.givenName} ${winner.Driver.familyName}`.trim();
+    }
+
+    return winners;
+  } catch (error) {
+    console.warn(`API fetch failed for ${url}:`, error);
+    return {};
+  }
+}
+
+/**
  * Get circuit info (returns mock data for now as it requires additional API calls)
  */
 export async function getCircuitInfo(raceName?: string): Promise<CircuitInfo> {

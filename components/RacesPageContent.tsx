@@ -10,12 +10,12 @@ import { formatRaceDate, getRaceDateObject } from "@/lib/date-utils";
 
 interface RacesPageContentProps {
   raceSchedule: Race[];
-  winnersMap: Map<string, string>;
+  winnersByRaceName: Record<string, string>;
 }
 
 export default function RacesPageContent({
   raceSchedule,
-  winnersMap,
+  winnersByRaceName,
 }: RacesPageContentProps) {
   const now = new Date();
   const pastRaces: Race[] = [];
@@ -76,7 +76,7 @@ export default function RacesPageContent({
           {allRaces.map((race, index) => {
             const raceDateObj = getRaceDateObject(race.date, race.time);
             const isPast = raceDateObj ? raceDateObj < now : false;
-            const winner = winnersMap.get(race.raceName);
+            const winner = winnersByRaceName[race.raceName];
             const formattedDateTime = formatRaceDate(race.date, race.time);
 
             return (
