@@ -9,12 +9,14 @@ interface StatsPageContentProps {
   drivers: DriverStanding[];
   constructors: ConstructorStanding[];
   lastRace: RaceResult | null;
+  season: number;
 }
 
 export default function StatsPageContent({
   drivers,
   constructors,
   lastRace,
+  season,
 }: StatsPageContentProps) {
   // Calculate statistics
   const totalWins = drivers.reduce((sum, driver) => sum + driver.wins, 0);
@@ -37,7 +39,7 @@ export default function StatsPageContent({
           className="mb-8"
         >
           <h1 className="text-5xl font-display font-bold mb-2">Statistics</h1>
-          <p className="text-white/60">2025 Season Overview</p>
+          <p className="text-white/60">{season} Season Overview</p>
         </motion.div>
 
         {/* Stats Grid */}

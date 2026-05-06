@@ -9,8 +9,14 @@ import type {
 
 // Ergast API base URL (HTTPS mirror via Jolpi)
 const ERGAST_API = "https://api.jolpi.ca/ergast/f1";
-const LAST_COMPLETED_SEASON = 2025; // For standings
-const CURRENT_SEASON = 2026; // For upcoming races
+/** Cache TTL — Jolpi "current" endpoints track the live season */
+const REVALIDATE_SECONDS = 300;
+
+export type DriverStandingsPayload = {
+  standings: DriverStanding[];
+  season: number;
+  round: number | null;
+};
 
 // Helper function to fetch with error handling
 async function fetchErgastData<T>(
@@ -19,7 +25,7 @@ async function fetchErgastData<T>(
 ): Promise<T> {
   try {
     const response = await fetch(url, {
-      next: { revalidate: 3600 }, // Cache for 1 hour
+      next: { revalidate: REVALIDATE_SECONDS },
       headers: {
         Accept: "application/json",
       },
@@ -151,34 +157,13 @@ function transformErgastLastRace(data: any): RaceResult | null {
 // API Functions
 
 /**
- * Get driver standings for the last completed season (2025)
+ * Driver standings for the API's current season (`/current/` tracks live championship).
  */
-export async function getDriverStandings(): Promise<DriverStanding[]> {
-  const url = `${ERGAST_API}/${LAST_COMPLETED_SEASON}/driverStandings.json`;
-  return fetchErgastData(url, transformErgastDriverStandings);
-}
-
-/**
- * Get constructor standings for the last completed season (2025)
- */
-export async function getConstructorStandings(): Promise<ConstructorStanding[]> {
-  const url = `${ERGAST_API}/${LAST_COMPLETED_SEASON}/constructorStandings.json`;
-  return fetchErgastData(url, transformErgastConstructorStandings);
-}
-
-/**
- * Get the next race from the current season (2026)
- * Fetches full schedule and finds the first future race
- * Returns null if no race is found
- */
-export async function getNextRace(): Promise<NextRace | null> {
-  const url = `${ERGAST_API}/${CURRENT_SEASON}.json`;
-  
-  console.log(`[getNextRace] Fetching from: ${url}`);
-  
+export async function getDriverStandings(): Promise<DriverStandingsPayload> {
+  const url = `${ERGAST_API}/current/driverStandings.json`;
   try {
     const response = await fetch(url, {
-      next: { revalidate: 3600 },
+      next: { revalidate: REVALIDATE_SECONDS },
       headers: {
         Accept: "application/json",
       },
@@ -189,33 +174,70 @@ export async function getNextRace(): Promise<NextRace | null> {
     }
 
     const data = await response.json();
-    console.log(`[getNextRace] API response received, races count:`, data?.MRData?.RaceTable?.Races?.length || 0);
+    const standings = transformErgastDriverStandings(data);
+    const seasonStr = data?.MRData?.StandingsTable?.season;
+    const roundStr = data?.MRData?.StandingsTable?.round;
+    const season = seasonStr
+      ? parseInt(seasonStr, 10)
+      : new Date().getFullYear();
+    const round = roundStr ? parseInt(roundStr, 10) : null;
+
+    return { standings, season, round };
+  } catch (error) {
+    console.warn(`API fetch failed for ${url}:`, error);
+    return {
+      standings: [],
+      season: new Date().getFullYear(),
+      round: null,
+    };
+  }
+}
+
+/**
+ * Constructor standings for the current season.
+ */
+export async function getConstructorStandings(): Promise<ConstructorStanding[]> {
+  const url = `${ERGAST_API}/current/constructorStandings.json`;
+  return fetchErgastData(url, transformErgastConstructorStandings);
+}
+
+/**
+ * Next race from the current season schedule (`current.json`).
+ */
+export async function getNextRace(): Promise<NextRace | null> {
+  const url = `${ERGAST_API}/current.json`;
+
+  try {
+    const response = await fetch(url, {
+      next: { revalidate: REVALIDATE_SECONDS },
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status}`);
+    }
+
+    const data = await response.json();
 
     if (!data?.MRData?.RaceTable?.Races) {
-      console.warn(`[getNextRace] No races found in response`);
       return null;
     }
 
     const races = data.MRData.RaceTable.Races;
     const currentDate = new Date();
 
-    // Find the first race in the future
     for (const race of races) {
-      // Combine date and time into ISO string
       const raceTime = race.time || "14:00:00Z";
       const raceDateStr = `${race.date}T${raceTime}`;
       const raceDate = new Date(raceDateStr);
 
-      console.log(`[getNextRace] Checking race: ${race.raceName}, date: ${raceDateStr}, parsed: ${raceDate.toISOString()}`);
-
       if (isNaN(raceDate.getTime())) {
-        console.warn(`[getNextRace] Invalid date for race: ${race.raceName}, date string: ${raceDateStr}`);
         continue;
       }
 
       if (raceDate > currentDate) {
-        console.log(`[getNextRace] Found next race: ${race.raceName} on ${raceDateStr}`);
-        
         return {
           date: race.date,
           time: race.time || undefined,
@@ -227,7 +249,6 @@ export async function getNextRace(): Promise<NextRace | null> {
       }
     }
 
-    console.warn(`[getNextRace] No future race found in ${races.length} races`);
     return null;
   } catch (error) {
     console.error(`[getNextRace] API fetch failed for ${url}:`, error);
@@ -236,22 +257,22 @@ export async function getNextRace(): Promise<NextRace | null> {
 }
 
 /**
- * Get the full race schedule for the current season (2026)
+ * Full race schedule for the current season.
  */
 export async function getRaceSchedule(): Promise<Race[]> {
-  const url = `${ERGAST_API}/${CURRENT_SEASON}.json`;
+  const url = `${ERGAST_API}/current.json`;
   return fetchErgastData(url, transformErgastRaceSchedule);
 }
 
 /**
- * Get the last race results from the last completed season (2025)
+ * Most recent race results for the current championship.
  */
 export async function getLastRaceResults(): Promise<RaceResult | null> {
-  const url = `${ERGAST_API}/${LAST_COMPLETED_SEASON}/last/results.json`;
-  
+  const url = `${ERGAST_API}/current/last/results.json`;
+
   try {
     const response = await fetch(url, {
-      next: { revalidate: 3600 },
+      next: { revalidate: REVALIDATE_SECONDS },
       headers: {
         Accept: "application/json",
       },

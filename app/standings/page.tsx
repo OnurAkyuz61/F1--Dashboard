@@ -2,15 +2,17 @@ import { getDriverStandings, getConstructorStandings } from "@/lib/api";
 import StandingsPageContent from "@/components/StandingsPageContent";
 
 export default async function StandingsPage() {
-  const [driverStandings, constructorStandings] = await Promise.all([
+  const [driverData, constructorStandings] = await Promise.all([
     getDriverStandings(),
     getConstructorStandings(),
   ]);
 
   return (
     <StandingsPageContent
-      driverStandings={driverStandings}
+      driverStandings={driverData.standings}
       constructorStandings={constructorStandings}
+      season={driverData.season}
+      round={driverData.round}
     />
   );
 }

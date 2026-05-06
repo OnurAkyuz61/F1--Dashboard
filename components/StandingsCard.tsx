@@ -6,6 +6,8 @@ import type { DriverStanding } from "@/lib/types";
 
 interface StandingsCardProps {
   standings: DriverStanding[];
+  season: number;
+  round?: number | null;
 }
 
 const podiumColors = [
@@ -20,8 +22,16 @@ const podiumIcons = [
   <Trophy key="bronze" className="text-amber-600" size={24} />,
 ];
 
-export default function StandingsCard({ standings }: StandingsCardProps) {
+export default function StandingsCard({
+  standings,
+  season,
+  round,
+}: StandingsCardProps) {
   const topThree = standings.slice(0, 3);
+  const standingsLabel =
+    round != null
+      ? `Round ${round} · ${season} Season`
+      : `${season} Season`;
 
   return (
     <motion.div
@@ -33,7 +43,7 @@ export default function StandingsCard({ standings }: StandingsCardProps) {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h3 className="text-2xl font-display font-bold">Driver Standings</h3>
-          <p className="text-xs text-white/40 mt-1">2025 Final Results</p>
+          <p className="text-xs text-white/40 mt-1">{standingsLabel}</p>
         </div>
         <TrendingUp className="text-f1-red" size={24} />
       </div>

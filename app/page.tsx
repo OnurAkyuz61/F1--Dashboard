@@ -10,8 +10,7 @@ import {
 } from "@/lib/api";
 
 export default async function Home() {
-  // Fetch all data in parallel
-  const [nextRace, driverStandings, lastRace] = await Promise.all([
+  const [nextRace, driverData, lastRace] = await Promise.all([
     getNextRace(),
     getDriverStandings(),
     getLastRaceResults(),
@@ -31,7 +30,11 @@ export default async function Home() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Standings Card - Takes 2 columns on large screens */}
           <div className="lg:col-span-2">
-            <StandingsCard standings={driverStandings} />
+            <StandingsCard
+              standings={driverData.standings}
+              season={driverData.season}
+              round={driverData.round}
+            />
           </div>
 
           {/* Circuit Info - Takes 1 column */}

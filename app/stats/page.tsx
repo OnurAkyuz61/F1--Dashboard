@@ -2,7 +2,7 @@ import { getDriverStandings, getConstructorStandings, getLastRaceResults } from 
 import StatsPageContent from "@/components/StatsPageContent";
 
 export default async function StatsPage() {
-  const [drivers, constructors, lastRace] = await Promise.all([
+  const [driverData, constructors, lastRace] = await Promise.all([
     getDriverStandings(),
     getConstructorStandings(),
     getLastRaceResults(),
@@ -10,9 +10,10 @@ export default async function StatsPage() {
 
   return (
     <StatsPageContent
-      drivers={drivers}
+      drivers={driverData.standings}
       constructors={constructors}
       lastRace={lastRace}
+      season={driverData.season}
     />
   );
 }

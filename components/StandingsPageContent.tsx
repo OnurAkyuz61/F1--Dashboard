@@ -11,13 +11,22 @@ import type { DriverStanding, ConstructorStanding } from "@/lib/types";
 interface StandingsPageContentProps {
   driverStandings: DriverStanding[];
   constructorStandings: ConstructorStanding[];
+  season: number;
+  round: number | null;
 }
 
 export default function StandingsPageContent({
   driverStandings,
   constructorStandings,
+  season,
+  round,
 }: StandingsPageContentProps) {
   const [activeTab, setActiveTab] = useState("drivers");
+
+  const standingsContext =
+    round != null
+      ? `Round ${round} · ${season} season standings`
+      : `${season} Season standings`;
 
   const podiumGradients = [
     "from-yellow-500/20 via-yellow-500/10 to-transparent border-yellow-500/30",
@@ -39,10 +48,12 @@ export default function StandingsPageContent({
           <div className="flex items-center gap-3 mb-2">
             <h1 className="text-5xl font-display font-bold">Standings</h1>
             <span className="px-3 py-1 rounded-full bg-white/10 text-white/60 text-xs font-semibold uppercase tracking-wider border border-white/20">
-              2025 Season
+              {season} Season
             </span>
           </div>
-          <p className="text-white/60">2025 Final Results - Driver and Constructor Rankings</p>
+          <p className="text-white/60">
+            Live championship — driver and constructor rankings (Jolpi/Ergast)
+          </p>
         </motion.div>
 
         <Tabs defaultValue="drivers">
@@ -69,7 +80,7 @@ export default function StandingsPageContent({
             {/* Season Context Header */}
             <div className="mb-6 pb-4 border-b border-white/10">
               <h2 className="text-2xl font-display font-bold mb-1">Driver Standings</h2>
-              <p className="text-xs text-white/40">2025 Final Results</p>
+              <p className="text-xs text-white/40">{standingsContext}</p>
             </div>
             
             {/* Desktop: Grid Layout */}
@@ -124,7 +135,7 @@ export default function StandingsPageContent({
             {/* Season Context Header */}
             <div className="mb-6 pb-4 border-b border-white/10">
               <h2 className="text-2xl font-display font-bold mb-1">Constructor Standings</h2>
-              <p className="text-xs text-white/40">2025 Final Results</p>
+              <p className="text-xs text-white/40">{standingsContext}</p>
             </div>
             
             <div className="glass-strong rounded-2xl p-6 overflow-hidden">
