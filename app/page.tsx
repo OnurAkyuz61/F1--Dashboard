@@ -20,14 +20,14 @@ export default async function Home() {
     <main className="min-h-screen">
       <Navbar />
       
-      <div className="container mx-auto px-6 pt-24 pb-16">
+      <div className="container mx-auto px-4 sm:px-6 pt-20 sm:pt-24 pb-14 sm:pb-16">
         {/* Hero Section - Full Width */}
         <div className="mb-8">
           <HeroSection nextRace={nextRace} />
         </div>
 
         {/* Bento Grid Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {/* Standings Card - Takes 2 columns on large screens */}
           <div className="lg:col-span-2">
             <StandingsCard

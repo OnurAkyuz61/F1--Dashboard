@@ -106,7 +106,7 @@ export default function HeroSection({ nextRace }: HeroSectionProps) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8 }}
-      className="relative min-h-[600px] flex items-center justify-center overflow-hidden rounded-2xl"
+      className="relative min-h-[560px] md:min-h-[600px] flex items-center justify-center overflow-hidden rounded-2xl"
     >
       {/* Blurred background with gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-br from-f1-red/20 via-background to-background">
@@ -118,27 +118,27 @@ export default function HeroSection({ nextRace }: HeroSectionProps) {
         />
       </div>
 
-      <div className="relative z-10 w-full max-w-6xl mx-auto px-6 py-16">
+      <div className="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
         <motion.div
           initial={{ y: 50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.6 }}
-          className="text-center mb-12"
+          className="text-center mb-10 sm:mb-12"
         >
           <motion.h2
             initial={{ scale: 0.9 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.4, type: "spring", stiffness: 200 }}
-            className="text-5xl md:text-7xl font-display font-bold mb-4 bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent"
+            className="text-4xl sm:text-5xl md:text-7xl font-display font-bold mb-4 bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent"
           >
             NEXT RACE
           </motion.h2>
           
-          <div className="flex items-center justify-center gap-4 mb-4 text-white/80">
-            <MapPin size={20} />
-            <p className="text-xl font-medium">{nextRace.circuitName}</p>
-            <span className="text-white/40">•</span>
-            <p className="text-lg">{nextRace.country}</p>
+          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 mb-4 text-white/80 px-2">
+            <MapPin size={18} className="shrink-0" />
+            <p className="text-lg sm:text-xl font-medium text-center">{nextRace.circuitName}</p>
+            <span className="hidden sm:inline text-white/40">•</span>
+            <p className="text-base sm:text-lg text-center w-full sm:w-auto">{nextRace.country}</p>
           </div>
           {nextRace.round && (
             <div className="text-sm text-white/60 mb-8">
@@ -151,7 +151,7 @@ export default function HeroSection({ nextRace }: HeroSectionProps) {
           initial={{ x: 100, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ delay: 0.6, duration: 0.6, ease: "easeOut" }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto"
+          className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 max-w-4xl mx-auto"
         >
           {countdownItems.map((item, index) => (
             <motion.div
@@ -160,9 +160,9 @@ export default function HeroSection({ nextRace }: HeroSectionProps) {
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.8 + index * 0.1, duration: 0.5 }}
               whileHover={{ scale: 1.05 }}
-              className="glass-strong rounded-xl p-6 text-center"
+              className="glass-strong rounded-xl p-4 sm:p-6 text-center"
             >
-              <div className="text-4xl md:text-5xl font-display font-bold text-f1-red mb-2">
+              <div className="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-f1-red mb-2">
                 {String(item.value).padStart(2, "0")}
               </div>
               <div className="text-sm text-white/60 uppercase tracking-wider">
@@ -176,7 +176,7 @@ export default function HeroSection({ nextRace }: HeroSectionProps) {
           initial={{ y: 30, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 1.2, duration: 0.6 }}
-          className="mt-12 flex items-center justify-center gap-6 text-white/60"
+          className="mt-10 sm:mt-12 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 text-white/60"
         >
           <div className="flex items-center gap-2">
             <Calendar size={18} />
