@@ -107,7 +107,7 @@ export default function Navbar() {
           <button
             type="button"
             aria-label="Close menu overlay"
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm md:hidden"
+            className="fixed inset-0 bg-black/80 backdrop-blur-md md:hidden"
             onClick={() => setIsMobileMenuOpen(false)}
           />
 
@@ -117,7 +117,7 @@ export default function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="absolute top-full left-0 right-0 z-50 border-b border-white/10 glass md:hidden"
+            className="absolute top-full left-0 right-0 z-50 border-b border-white/15 bg-[#090909]/95 backdrop-blur-xl shadow-2xl md:hidden"
           >
             <div className="px-4 py-3 flex flex-col gap-1">
               {navItems.map((item) => {
