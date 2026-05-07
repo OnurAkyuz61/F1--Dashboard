@@ -147,10 +147,10 @@ export default function CircuitInfo({
       initial={{ x: 50, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className="glass-strong rounded-2xl p-6 h-full"
+      className="glass-strong rounded-2xl p-4 sm:p-6 h-full"
     >
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-2xl font-display font-bold">Circuit Details</h3>
+        <h3 className="text-xl sm:text-2xl font-display font-bold">Circuit Details</h3>
         <MapPin className="text-f1-red" size={24} />
       </div>
 
@@ -162,17 +162,17 @@ export default function CircuitInfo({
             animate={{ x: 0, opacity: 1 }}
             transition={{ delay: index * 0.1, duration: 0.5 }}
             whileHover={!item.isLoading ? { scale: 1.02, x: 5 } : {}}
-            className="glass rounded-lg p-4 flex items-center justify-between group"
+            className="glass rounded-lg p-3 sm:p-4 flex items-center justify-between gap-3 group"
           >
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3 min-w-0">
               <div className="text-f1-red group-hover:scale-110 transition-transform">
                 {item.icon}
               </div>
-              <span className="text-sm text-white/60 uppercase tracking-wider">
+              <span className="text-xs sm:text-sm text-white/60 uppercase tracking-wider">
                 {item.label}
               </span>
             </div>
-            <span className="font-semibold text-lg flex items-center gap-2">
+            <span className="font-semibold text-sm sm:text-base lg:text-lg flex items-center gap-2 shrink-0">
               {item.isLoading ? (
                 <Loader2 size={16} className="animate-spin text-f1-red" />
               ) : (

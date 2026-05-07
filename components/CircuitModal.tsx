@@ -92,7 +92,7 @@ export default function CircuitModal({ race, onClose }: CircuitModalProps) {
           </div>
 
           {/* Right: Details */}
-          <div className="flex-1 overflow-y-auto p-6 lg:p-8 flex flex-col">
+          <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 flex flex-col">
             <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-white/80 mb-6 pb-6 border-b border-white/10">
               <span className="flex items-center gap-2">
                 <MapPin size={16} className="text-f1-red shrink-0" />

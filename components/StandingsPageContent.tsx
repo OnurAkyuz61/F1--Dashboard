@@ -38,15 +38,15 @@ export default function StandingsPageContent({
     <main className="min-h-screen">
       <Navbar />
       
-      <div className="container mx-auto px-6 pt-24 pb-16">
+      <div className="container mx-auto px-4 sm:px-6 pt-20 sm:pt-24 pb-14 sm:pb-16">
         <motion.div
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.5 }}
           className="mb-8"
         >
-          <div className="flex items-center gap-3 mb-2">
-            <h1 className="text-5xl font-display font-bold">Standings</h1>
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-2">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold">Standings</h1>
             <span className="px-3 py-1 rounded-full bg-white/10 text-white/60 text-xs font-semibold uppercase tracking-wider border border-white/20">
               {season} Season
             </span>
@@ -57,7 +57,7 @@ export default function StandingsPageContent({
         </motion.div>
 
         <Tabs defaultValue="drivers">
-          <TabsList>
+          <TabsList className="mb-1">
             <TabsTrigger
               value="drivers"
               onClick={() => setActiveTab("drivers")}
@@ -79,7 +79,7 @@ export default function StandingsPageContent({
           <TabsContent value="drivers" isActive={activeTab === "drivers"}>
             {/* Season Context Header */}
             <div className="mb-6 pb-4 border-b border-white/10">
-              <h2 className="text-2xl font-display font-bold mb-1">Driver Standings</h2>
+              <h2 className="text-xl sm:text-2xl font-display font-bold mb-1">Driver Standings</h2>
               <p className="text-xs text-white/40">{standingsContext}</p>
             </div>
             
@@ -111,7 +111,7 @@ export default function StandingsPageContent({
                         {driver.position}
                       </span>
                       <div className="flex-1">
-                        <div className="font-semibold text-lg">
+                          <div className="font-semibold text-base sm:text-lg leading-tight">
                           {driver.Driver.givenName} {driver.Driver.familyName}
                         </div>
                         <div className="text-sm text-white/60">
@@ -134,13 +134,13 @@ export default function StandingsPageContent({
           <TabsContent value="constructors" isActive={activeTab === "constructors"}>
             {/* Season Context Header */}
             <div className="mb-6 pb-4 border-b border-white/10">
-              <h2 className="text-2xl font-display font-bold mb-1">Constructor Standings</h2>
+              <h2 className="text-xl sm:text-2xl font-display font-bold mb-1">Constructor Standings</h2>
               <p className="text-xs text-white/40">{standingsContext}</p>
             </div>
             
-            <div className="glass-strong rounded-2xl p-6 overflow-hidden">
+            <div className="glass-strong rounded-2xl p-3 sm:p-6 overflow-hidden">
               <div className="overflow-x-auto">
-                <table className="w-full">
+                <table className="w-full min-w-[580px]">
                   <thead>
                     <tr className="border-b border-white/10">
                       <th className="text-left py-4 px-4 text-sm font-display font-bold text-white/60 uppercase tracking-wider">

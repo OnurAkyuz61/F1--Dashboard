@@ -33,7 +33,7 @@ export function Tabs({ defaultValue, children, className = "" }: TabsProps) {
 
 export function TabsList({ children, className = "" }: TabsListProps) {
   return (
-    <div className={`inline-flex h-10 items-center justify-center rounded-lg bg-white/5 p-1 ${className}`}>
+    <div className={`inline-flex h-auto min-h-10 w-full sm:w-auto items-center justify-start sm:justify-center rounded-lg bg-white/5 p-1 overflow-x-auto ${className}`}>
       {children}
     </div>
   );
@@ -44,7 +44,7 @@ export function TabsTrigger({ value, children, onClick, isActive }: TabsTriggerP
     <button
       onClick={onClick}
       className={`
-        inline-flex items-center justify-center whitespace-nowrap rounded-md px-4 py-2 text-sm font-medium transition-all
+        inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium transition-all shrink-0
         ${isActive 
           ? "bg-f1-red text-white shadow-sm" 
           : "text-white/60 hover:text-white hover:bg-white/5"

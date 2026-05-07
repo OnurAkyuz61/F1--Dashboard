@@ -31,30 +31,30 @@ export default function StatsPageContent({
     <main className="min-h-screen">
       <Navbar />
       
-      <div className="container mx-auto px-6 pt-24 pb-16">
+      <div className="container mx-auto px-4 sm:px-6 pt-20 sm:pt-24 pb-14 sm:pb-16">
         <motion.div
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.5 }}
           className="mb-8"
         >
-          <h1 className="text-5xl font-display font-bold mb-2">Statistics</h1>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold mb-2">Statistics</h1>
           <p className="text-white/60">{season} Season Overview</p>
         </motion.div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
           {/* Total Points */}
           <motion.div
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.1 }}
-            className="glass-strong rounded-2xl p-6"
+            className="glass-strong rounded-2xl p-4 sm:p-6"
           >
             <div className="flex items-center justify-between mb-4">
               <Zap className="text-f1-red" size={32} />
             </div>
-            <div className="text-3xl font-display font-bold mb-1">
+            <div className="text-2xl sm:text-3xl font-display font-bold mb-1">
               {totalPoints.toLocaleString()}
             </div>
             <div className="text-sm text-white/60">Total Points</div>
@@ -65,12 +65,12 @@ export default function StatsPageContent({
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.2 }}
-            className="glass-strong rounded-2xl p-6"
+            className="glass-strong rounded-2xl p-4 sm:p-6"
           >
             <div className="flex items-center justify-between mb-4">
               <Trophy className="text-yellow-500" size={32} />
             </div>
-            <div className="text-3xl font-display font-bold mb-1">
+            <div className="text-2xl sm:text-3xl font-display font-bold mb-1">
               {totalWins}
             </div>
             <div className="text-sm text-white/60">Total Wins</div>
@@ -81,12 +81,12 @@ export default function StatsPageContent({
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.3 }}
-            className="glass-strong rounded-2xl p-6"
+            className="glass-strong rounded-2xl p-4 sm:p-6"
           >
             <div className="flex items-center justify-between mb-4">
               <Award className="text-f1-red" size={32} />
             </div>
-            <div className="text-xl font-display font-bold mb-1">
+            <div className="text-lg sm:text-xl font-display font-bold mb-1 leading-tight">
               {topDriver?.Driver.givenName} {topDriver?.Driver.familyName}
             </div>
             <div className="text-sm text-white/60">Champion</div>
@@ -97,12 +97,12 @@ export default function StatsPageContent({
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.4 }}
-            className="glass-strong rounded-2xl p-6"
+            className="glass-strong rounded-2xl p-4 sm:p-6"
           >
             <div className="flex items-center justify-between mb-4">
               <TrendingUp className="text-f1-red" size={32} />
             </div>
-            <div className="text-xl font-display font-bold mb-1">
+            <div className="text-lg sm:text-xl font-display font-bold mb-1 leading-tight">
               {topTeam?.Constructor.name}
             </div>
             <div className="text-sm text-white/60">Constructors&apos; Champion</div>
@@ -110,15 +110,15 @@ export default function StatsPageContent({
         </div>
 
         {/* Detailed Stats */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
           {/* Most Wins */}
           <motion.div
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.5 }}
-            className="glass-strong rounded-2xl p-6"
+            className="glass-strong rounded-2xl p-4 sm:p-6"
           >
-            <h2 className="text-2xl font-display font-bold mb-6 flex items-center gap-3">
+            <h2 className="text-xl sm:text-2xl font-display font-bold mb-6 flex items-center gap-3">
               <Trophy className="text-yellow-500" size={24} />
               Most Wins
             </h2>
@@ -130,22 +130,22 @@ export default function StatsPageContent({
                 .map((driver, index) => (
                   <div
                     key={driver.Driver.driverId}
-                    className="flex items-center justify-between glass rounded-lg p-4"
+                    className="flex items-center justify-between gap-3 glass rounded-lg p-3 sm:p-4"
                   >
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-3 sm:gap-4 min-w-0">
                       <span className="text-2xl font-display font-bold text-white/40 w-8">
                         {index + 1}
                       </span>
-                      <div>
-                        <div className="font-semibold text-lg">
+                      <div className="min-w-0">
+                        <div className="font-semibold text-base sm:text-lg leading-tight break-words">
                           {driver.Driver.givenName} {driver.Driver.familyName}
                         </div>
-                        <div className="text-sm text-white/60">
+                        <div className="text-sm text-white/60 break-words">
                           {driver.Constructors[0]?.name}
                         </div>
                       </div>
                     </div>
-                    <div className="text-2xl font-display font-bold text-yellow-500">
+                    <div className="text-xl sm:text-2xl font-display font-bold text-yellow-500 shrink-0">
                       {driver.wins}
                     </div>
                   </div>
@@ -159,15 +159,15 @@ export default function StatsPageContent({
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.6 }}
-              className="glass-strong rounded-2xl p-6"
+              className="glass-strong rounded-2xl p-4 sm:p-6"
             >
-              <h2 className="text-2xl font-display font-bold mb-6 flex items-center gap-3">
+              <h2 className="text-xl sm:text-2xl font-display font-bold mb-6 flex items-center gap-3">
                 <Award className="text-f1-red" size={24} />
                 Last Race Winner
               </h2>
-              <div className="glass rounded-lg p-6 bg-gradient-to-br from-f1-red/10 to-f1-red/5 border border-f1-red/20">
+              <div className="glass rounded-lg p-4 sm:p-6 bg-gradient-to-br from-f1-red/10 to-f1-red/5 border border-f1-red/20">
                 <div className="text-sm text-white/60 mb-2">{lastRace.raceName}</div>
-                <div className="text-3xl font-display font-bold mb-2">
+                <div className="text-2xl sm:text-3xl font-display font-bold mb-2 leading-tight">
                   {lastRace.Results[0].Driver.givenName}{" "}
                   {lastRace.Results[0].Driver.familyName}
                 </div>

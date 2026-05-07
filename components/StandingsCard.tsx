@@ -38,11 +38,11 @@ export default function StandingsCard({
       initial={{ x: -50, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className="glass-strong rounded-2xl p-6 h-full"
+      className="glass-strong rounded-2xl p-4 sm:p-6 h-full"
     >
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h3 className="text-2xl font-display font-bold">Driver Standings</h3>
+          <h3 className="text-xl sm:text-2xl font-display font-bold">Driver Standings</h3>
           <p className="text-xs text-white/40 mt-1">{standingsLabel}</p>
         </div>
         <TrendingUp className="text-f1-red" size={24} />
@@ -55,8 +55,8 @@ export default function StandingsCard({
             initial={{ x: -30, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ delay: index * 0.1, duration: 0.5 }}
-            whileHover={{ scale: 1.02, x: 5 }}
-            className={`glass rounded-xl p-4 bg-gradient-to-r ${podiumColors[index]} border-l-4 ${
+            whileHover={{ scale: 1.02, x: 3 }}
+            className={`glass rounded-xl p-3 sm:p-4 bg-gradient-to-r ${podiumColors[index]} border-l-4 ${
               index === 0
                 ? "border-yellow-500"
                 : index === 1
@@ -65,24 +65,24 @@ export default function StandingsCard({
             }`}
           >
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 sm:gap-4 min-w-0">
                 <div className="flex items-center gap-2">
-                  <span className="text-2xl font-display font-bold text-white/40">
+                  <span className="text-xl sm:text-2xl font-display font-bold text-white/40">
                     #{driver.position}
                   </span>
                   {podiumIcons[index]}
                 </div>
-                <div>
-                  <h4 className="font-semibold text-lg">
+                <div className="min-w-0">
+                  <h4 className="font-semibold text-base sm:text-lg leading-tight break-words">
                     {driver.Driver.givenName} {driver.Driver.familyName}
                   </h4>
-                  <p className="text-sm text-white/60">
+                  <p className="text-xs sm:text-sm text-white/60 break-words">
                     {driver.Constructors[0]?.name || "Unknown"}
                   </p>
                 </div>
               </div>
-              <div className="text-right">
-                <div className="text-2xl font-display font-bold text-f1-red">
+              <div className="text-right shrink-0">
+                <div className="text-xl sm:text-2xl font-display font-bold text-f1-red">
                   {driver.points}
                 </div>
                 <div className="text-xs text-white/40 uppercase">Points</div>

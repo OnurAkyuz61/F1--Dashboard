@@ -20,10 +20,10 @@ export default function RecentResult({ lastRace }: RecentResultProps) {
       initial={{ y: 50, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className="glass-strong rounded-2xl p-6 h-full"
+      className="glass-strong rounded-2xl p-4 sm:p-6 h-full"
     >
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-2xl font-display font-bold">Last Race</h3>
+        <h3 className="text-xl sm:text-2xl font-display font-bold">Last Race</h3>
         <Flag className="text-f1-red" size={24} />
       </div>
 
@@ -32,12 +32,12 @@ export default function RecentResult({ lastRace }: RecentResultProps) {
           initial={{ scale: 0.95 }}
           animate={{ scale: 1 }}
           transition={{ delay: 0.2 }}
-          className="glass rounded-xl p-6 bg-gradient-to-br from-f1-red/10 to-f1-red/5 border border-f1-red/20"
+          className="glass rounded-xl p-4 sm:p-6 bg-gradient-to-br from-f1-red/10 to-f1-red/5 border border-f1-red/20"
         >
           <div className="flex items-center gap-3 mb-4">
             <Trophy className="text-yellow-500" size={28} />
             <div>
-              <h4 className="text-xl font-bold">{lastRace.raceName}</h4>
+              <h4 className="text-lg sm:text-xl font-bold leading-tight">{lastRace.raceName}</h4>
               <p className="text-sm text-white/60">{lastRace.circuitName}</p>
             </div>
           </div>
@@ -47,7 +47,7 @@ export default function RecentResult({ lastRace }: RecentResultProps) {
               <span className="text-sm text-white/60 uppercase tracking-wider">
                 Winner
               </span>
-              <span className="font-semibold text-lg">
+              <span className="font-semibold text-base sm:text-lg text-right">
                 {winner.Driver.givenName} {winner.Driver.familyName}
               </span>
             </div>

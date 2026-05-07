@@ -11,12 +11,12 @@ export default function Footer() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5, delay: 0.2 }}
-      className="border-t border-white/10 backdrop-blur-md bg-black/20 py-8"
+      className="border-t border-white/10 backdrop-blur-md bg-black/20 py-6 sm:py-8"
     >
-      <div className="container mx-auto px-6">
+      <div className="container mx-auto px-4 sm:px-6">
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-8">
           {/* Left - Copyright */}
-          <div className="text-sm text-white/60 text-center md:text-left">
+          <div className="text-xs sm:text-sm text-white/60 text-center md:text-left">
             © {currentYear} F1 Dashboard. Unofficial Application.
           </div>
 
@@ -27,7 +27,7 @@ export default function Footer() {
           </div>
 
           {/* Right - Credits */}
-          <div className="text-sm text-white/60 text-center md:text-right">
+          <div className="text-xs sm:text-sm text-white/60 text-center md:text-right">
             Designed & Built by{" "}
             <Link
               href="https://onurakyuz.com"

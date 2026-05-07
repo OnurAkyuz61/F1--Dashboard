@@ -22,18 +22,18 @@ export default function TeamsPageContent({ teams }: TeamsPageContentProps) {
   return (
     <main className="min-h-screen">
       <Navbar />
-      <div className="container mx-auto px-6 pt-24 pb-16">
+      <div className="container mx-auto px-4 sm:px-6 pt-20 sm:pt-24 pb-14 sm:pb-16">
         <motion.div
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.5 }}
           className="mb-8"
         >
-          <h1 className="text-5xl font-display font-bold mb-2">Teams</h1>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold mb-2">Teams</h1>
           <p className="text-white/60">Formula 1 Constructor Teams</p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {teams.map((team, index) => {
             const teamId = team.Constructor.constructorId.toLowerCase();
             const borderColor = teamColors[teamId] || "border-white/10";
@@ -46,7 +46,7 @@ export default function TeamsPageContent({ teams }: TeamsPageContentProps) {
                 transition={{ delay: index * 0.05, duration: 0.5 }}
                 whileHover={{ scale: 1.02, y: -5 }}
                 className={`
-                  glass-strong rounded-2xl p-6 border-2 ${borderColor}
+                  glass-strong rounded-2xl p-4 sm:p-6 border-2 ${borderColor}
                   hover:border-opacity-100 transition-all
                 `}
               >
@@ -61,7 +61,7 @@ export default function TeamsPageContent({ teams }: TeamsPageContentProps) {
                         .toUpperCase()}
                     </div>
                     <div>
-                      <h3 className="text-xl font-display font-bold">
+                      <h3 className="text-lg sm:text-xl font-display font-bold leading-tight">
                         {team.Constructor.name}
                       </h3>
                       <div className="flex items-center gap-1 text-sm text-white/60">

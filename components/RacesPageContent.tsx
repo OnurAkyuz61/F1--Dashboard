@@ -24,20 +24,20 @@ export default function RacesPageContent({
   return (
     <main className="min-h-screen">
       <Navbar />
-      <div className="container mx-auto px-6 pt-24 pb-16">
+      <div className="container mx-auto px-4 sm:px-6 pt-20 sm:pt-24 pb-14 sm:pb-16">
         <motion.div
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.5 }}
           className="mb-8"
         >
-          <h1 className="text-5xl font-display font-bold mb-2">Race Schedule</h1>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold mb-2">Race Schedule</h1>
           <p className="text-white/60">
             {new Date().getFullYear()} Formula 1 World Championship
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {allRaces.map((race, index) => {
             const raceDateObj = getRaceDateObject(race.date, race.time);
             const isPast = raceDateObj ? raceDateObj < now : false;
@@ -60,9 +60,9 @@ export default function RacesPageContent({
                   }
                 }}
                 className={`
-                  glass-strong rounded-2xl p-6 cursor-pointer
+                  glass-strong rounded-2xl p-4 sm:p-6 cursor-pointer
                   ${isPast ? "opacity-75" : ""}
-                  hover:scale-105 transition-transform
+                  hover:scale-[1.02] transition-transform
                 `}
               >
                 <div className="flex items-start justify-between mb-4">
@@ -83,14 +83,14 @@ export default function RacesPageContent({
                   )}
                 </div>
 
-                <h3 className="text-xl font-display font-bold mb-2">
+                <h3 className="text-xl sm:text-2xl font-display font-bold mb-2 leading-tight">
                   {race.raceName}
                 </h3>
 
                 <div className="space-y-3">
                   <div className="flex items-center gap-2 text-white/80">
                     <MapPin size={16} />
-                    <span className="text-sm">{race.circuitName}</span>
+                    <span className="text-sm break-words">{race.circuitName}</span>
                   </div>
 
                   <div className="flex items-center gap-2 text-white/60">
