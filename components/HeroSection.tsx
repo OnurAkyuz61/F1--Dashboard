@@ -7,9 +7,11 @@ import type { NextRace } from "@/lib/types";
 
 interface HeroSectionProps {
   nextRace: NextRace | null;
+  season?: number;
 }
 
-export default function HeroSection({ nextRace }: HeroSectionProps) {
+export default function HeroSection({ nextRace, season }: HeroSectionProps) {
+  const seasonYear = season ?? new Date().getFullYear();
   const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
   useEffect(() => {
@@ -68,9 +70,11 @@ export default function HeroSection({ nextRace }: HeroSectionProps) {
         <div className="absolute inset-0 bg-gradient-to-br from-f1-red/20 via-background to-background" />
         <div className="relative z-10 text-center">
           <h2 className="text-5xl md:text-7xl font-display font-bold mb-4 bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent">
-            SEASON STARTS SOON
+            NO UPCOMING RACES
           </h2>
-          <p className="text-xl text-white/60">The 2026 Formula 1 season is coming soon!</p>
+          <p className="text-xl text-white/60">
+            The {seasonYear} Formula 1 season — check back when the next race is scheduled.
+          </p>
         </div>
       </motion.section>
     );

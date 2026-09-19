@@ -23,7 +23,7 @@ export default async function Home() {
       <div className="container mx-auto px-4 sm:px-6 pt-20 sm:pt-24 pb-14 sm:pb-16">
         {/* Hero Section - Full Width */}
         <div className="mb-8">
-          <HeroSection nextRace={nextRace} />
+          <HeroSection nextRace={nextRace} season={driverData.season} />
         </div>
 
         {/* Bento Grid Layout */}
