@@ -3,6 +3,8 @@
 import { motion } from "framer-motion";
 import { Trophy, TrendingUp, Award, Zap } from "lucide-react";
 import Navbar from "@/components/Navbar";
+import DriverAvatar from "@/components/DriverAvatar";
+import { getTeamColor } from "@/lib/image-map";
 import type { DriverStanding, ConstructorStanding, RaceResult } from "@/lib/types";
 
 interface StatsPageContentProps {
@@ -23,9 +25,6 @@ export default function StatsPageContent({
   const totalPoints = drivers.reduce((sum, driver) => sum + driver.points, 0);
   const topDriver = drivers[0];
   const topTeam = constructors[0];
-  const mostWins = drivers.reduce((max, driver) =>
-    driver.wins > max.wins ? driver : max
-  );
 
   return (
     <main className="min-h-screen">
@@ -87,9 +86,11 @@ export default function StatsPageContent({
               <Award className="text-f1-red" size={32} />
             </div>
             <div className="text-lg sm:text-xl font-display font-bold mb-1 leading-tight">
-              {topDriver?.Driver.givenName} {topDriver?.Driver.familyName}
+              {topDriver
+                ? `${topDriver.Driver.givenName} ${topDriver.Driver.familyName}`
+                : "—"}
             </div>
-            <div className="text-sm text-white/60">Champion</div>
+            <div className="text-sm text-white/60">Championship Leader</div>
           </motion.div>
 
           {/* Top Team */}
@@ -103,9 +104,9 @@ export default function StatsPageContent({
               <TrendingUp className="text-f1-red" size={32} />
             </div>
             <div className="text-lg sm:text-xl font-display font-bold mb-1 leading-tight">
-              {topTeam?.Constructor.name}
+              {topTeam?.Constructor.name ?? "—"}
             </div>
-            <div className="text-sm text-white/60">Constructors&apos; Champion</div>
+            <div className="text-sm text-white/60">Constructors&apos; Leader</div>
           </motion.div>
         </div>
 
@@ -123,7 +124,10 @@ export default function StatsPageContent({
               Most Wins
             </h2>
             <div className="space-y-4">
-              {drivers
+              {drivers.every((d) => d.wins === 0) && (
+                <p className="text-sm text-white/50">No race wins recorded yet.</p>
+              )}
+              {[...drivers]
                 .filter((d) => d.wins > 0)
                 .sort((a, b) => b.wins - a.wins)
                 .slice(0, 5)
@@ -136,6 +140,16 @@ export default function StatsPageContent({
                       <span className="text-2xl font-display font-bold text-white/40 w-8">
                         {index + 1}
                       </span>
+                      <DriverAvatar
+                        driverId={driver.Driver.driverId}
+                        givenName={driver.Driver.givenName}
+                        familyName={driver.Driver.familyName}
+                        code={driver.Driver.code}
+                        number={driver.Driver.permanentNumber}
+                        teamColor={getTeamColor(
+                          driver.Constructors[driver.Constructors.length - 1]?.constructorId || ""
+                        )}
+                      />
                       <div className="min-w-0">
                         <div className="font-semibold text-base sm:text-lg leading-tight break-words">
                           {driver.Driver.givenName} {driver.Driver.familyName}
