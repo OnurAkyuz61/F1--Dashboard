@@ -1,6 +1,13 @@
 // TypeScript interfaces for F1 data
 
-export interface Race {
+export interface CircuitLocation {
+  circuitId?: string;
+  locality?: string;
+  lat?: number;
+  long?: number;
+}
+
+export interface Race extends CircuitLocation {
   date: string;
   time?: string;
   circuitName: string;
@@ -16,6 +23,7 @@ export interface Driver {
   familyName: string;
   nationality: string;
   permanentNumber?: string;
+  code?: string;
 }
 
 export interface Constructor {
@@ -39,7 +47,7 @@ export interface ConstructorStanding {
   Constructor: Constructor;
 }
 
-export interface RaceResult {
+export interface RaceResult extends CircuitLocation {
   raceName: string;
   date: string;
   circuitName: string;
@@ -52,7 +60,7 @@ export interface RaceResult {
   }[];
 }
 
-export interface NextRace {
+export interface NextRace extends CircuitLocation {
   date: string;
   circuitName: string;
   country: string;

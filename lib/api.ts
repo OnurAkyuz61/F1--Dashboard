@@ -44,6 +44,24 @@ async function fetchErgastData<T>(
   }
 }
 
+/** Ergast points can be fractional (half points, sprint splits) */
+function parsePoints(value: unknown): number {
+  const n = parseFloat(String(value ?? "0"));
+  return Number.isFinite(n) ? n : 0;
+}
+
+/** Extract circuit id + coordinates so the UI can look up maps & weather */
+function circuitLocation(circuit: any) {
+  const lat = parseFloat(circuit?.Location?.lat);
+  const long = parseFloat(circuit?.Location?.long);
+  return {
+    circuitId: circuit?.circuitId || undefined,
+    locality: circuit?.Location?.locality || undefined,
+    lat: Number.isFinite(lat) ? lat : undefined,
+    long: Number.isFinite(long) ? long : undefined,
+  };
+}
+
 // Transform Ergast API response to our types
 function transformErgastRace(data: any): NextRace | null {
   if (!data?.MRData?.RaceTable?.Races?.[0]) {
@@ -58,6 +76,7 @@ function transformErgastRace(data: any): NextRace | null {
     country: race.Circuit.Location.country,
     raceName: race.raceName,
     round: parseInt(race.round, 10),
+    ...circuitLocation(race.Circuit),
   };
 }
 
@@ -69,7 +88,7 @@ function transformErgastDriverStandings(data: any): DriverStanding[] {
   return data.MRData.StandingsTable.StandingsLists[0].DriverStandings.map(
     (standing: any) => ({
       position: parseInt(standing.position, 10),
-      points: parseInt(standing.points, 10),
+      points: parsePoints(standing.points),
       wins: parseInt(standing.wins, 10),
       Driver: {
         driverId: standing.Driver.driverId,
@@ -77,6 +96,7 @@ function transformErgastDriverStandings(data: any): DriverStanding[] {
         familyName: standing.Driver.familyName,
         nationality: standing.Driver.nationality,
         permanentNumber: standing.Driver.permanentNumber || undefined,
+        code: standing.Driver.code || undefined,
       },
       Constructors: standing.Constructors.map((c: any) => ({
         constructorId: c.constructorId,
@@ -97,7 +117,7 @@ function transformErgastConstructorStandings(data: any): ConstructorStanding[] {
   return data.MRData.StandingsTable.StandingsLists[0].ConstructorStandings.map(
     (standing: any) => ({
       position: parseInt(standing.position, 10),
-      points: parseInt(standing.points, 10),
+      points: parsePoints(standing.points),
       wins: parseInt(standing.wins, 10),
       Constructor: {
         constructorId: standing.Constructor.constructorId,
@@ -121,6 +141,7 @@ function transformErgastRaceSchedule(data: any): Race[] {
     round: parseInt(race.round, 10),
     season: parseInt(race.season, 10),
     raceName: race.raceName,
+    ...circuitLocation(race.Circuit),
   }));
 }
 
@@ -135,6 +156,7 @@ function transformErgastLastRace(data: any): RaceResult | null {
     date: race.date,
     circuitName: race.Circuit.circuitName,
     country: race.Circuit.Location.country,
+    ...circuitLocation(race.Circuit),
     Results: race.Results?.map((result: any) => ({
       position: parseInt(result.position, 10),
       Driver: {
@@ -143,6 +165,7 @@ function transformErgastLastRace(data: any): RaceResult | null {
         familyName: result.Driver.familyName,
         nationality: result.Driver.nationality,
         permanentNumber: result.Driver.permanentNumber || undefined,
+        code: result.Driver.code || undefined,
       },
       Constructor: {
         constructorId: result.Constructor.constructorId,
@@ -245,6 +268,7 @@ export async function getNextRace(): Promise<NextRace | null> {
           country: race.Circuit.Location.country,
           raceName: race.raceName,
           round: parseInt(race.round, 10),
+          ...circuitLocation(race.Circuit),
         };
       }
     }
