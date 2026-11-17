@@ -12,7 +12,9 @@ function getWeatherCondition(code: number): string {
   // WMO Weather interpretation codes (WW)
   // https://open-meteo.com/en/docs
   if (code === 0) return "Clear Sky";
-  if (code === 1 || code === 2 || code === 3) return "Partly Cloudy";
+  if (code === 1) return "Mainly Clear";
+  if (code === 2) return "Partly Cloudy";
+  if (code === 3) return "Overcast";
   if (code === 45 || code === 48) return "Foggy";
   if (code === 51 || code === 53 || code === 55) return "Drizzle";
   if (code === 56 || code === 57) return "Freezing Drizzle";
@@ -41,10 +43,7 @@ export async function getTrackWeather(
   try {
     const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true&timezone=auto`;
     
-    console.log(`[getTrackWeather] Fetching weather for lat: ${latitude}, long: ${longitude}`);
-    
     const response = await fetch(url, {
-      next: { revalidate: 3600 }, // Cache for 1 hour
       headers: {
         Accept: "application/json",
       },
@@ -63,8 +62,6 @@ export async function getTrackWeather(
 
     const weather = data.current_weather;
     const condition = getWeatherCondition(weather.weathercode);
-
-    console.log(`[getTrackWeather] Weather fetched: ${weather.temperature}°C, ${condition}`);
 
     return {
       temperature: Math.round(weather.temperature),
