@@ -9,6 +9,11 @@ import { getTrackWeather, type WeatherData } from "@/lib/weather";
 interface CircuitInfoProps {
   circuitName: string;
   country: string;
+  /** Ergast circuit id (preferred lookup key) */
+  circuitId?: string;
+  /** Coordinates from the API — used for live weather */
+  lat?: number;
+  long?: number;
   /** In modal: compact grid without card wrapper and without Circuit/Country rows */
   variant?: "card" | "compact";
 }
@@ -16,6 +21,9 @@ interface CircuitInfoProps {
 export default function CircuitInfo({
   circuitName,
   country,
+  circuitId,
+  lat,
+  long,
   variant = "card",
 }: CircuitInfoProps) {
   const [weather, setWeather] = useState<WeatherData | null>(null);
@@ -23,24 +31,27 @@ export default function CircuitInfo({
   const [weatherError, setWeatherError] = useState(false);
 
   // Get static circuit data
-  const circuitData = getCircuitData(circuitName);
+  const circuitData = getCircuitData(circuitName, circuitId);
+  const latitude = lat ?? circuitData?.latitude;
+  const longitude = long ?? circuitData?.longitude;
 
   // Fetch weather data when component mounts or circuit changes
   useEffect(() => {
-    if (!circuitData) {
+    if (latitude == null || longitude == null) {
+      setWeather(null);
+      setWeatherError(false);
       setWeatherLoading(false);
       return;
     }
 
+    let cancelled = false;
     const fetchWeather = async () => {
       setWeatherLoading(true);
       setWeatherError(false);
-      
+
       try {
-        const weatherData = await getTrackWeather(
-          circuitData.latitude,
-          circuitData.longitude
-        );
+        const weatherData = await getTrackWeather(latitude, longitude);
+        if (cancelled) return;
         
         if (weatherData) {
           setWeather(weatherData);
@@ -49,14 +60,17 @@ export default function CircuitInfo({
         }
       } catch (error) {
         console.error("Failed to fetch weather:", error);
-        setWeatherError(true);
+        if (!cancelled) setWeatherError(true);
       } finally {
-        setWeatherLoading(false);
+        if (!cancelled) setWeatherLoading(false);
       }
     };
 
     fetchWeather();
-  }, [circuitData]);
+    return () => {
+      cancelled = true;
+    };
+  }, [latitude, longitude]);
 
   const infoItems = [
     ...(variant === "card"
