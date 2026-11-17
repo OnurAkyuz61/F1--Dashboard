@@ -6,6 +6,9 @@ import Navbar from "@/components/Navbar";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/Tabs";
 import { Trophy, Users } from "lucide-react";
 import DriverCard from "@/components/DriverCard";
+import DriverAvatar from "@/components/DriverAvatar";
+import TeamBadge from "@/components/TeamBadge";
+import { getTeamColor } from "@/lib/image-map";
 import type { DriverStanding, ConstructorStanding } from "@/lib/types";
 
 interface StandingsPageContentProps {
@@ -105,21 +108,31 @@ export default function StandingsPageContent({
                   transition={{ delay: index * 0.05, duration: 0.4 }}
                   className="glass-strong rounded-xl p-4"
                 >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3 flex-1">
-                      <span className="text-2xl font-display font-bold text-white/40 min-w-[40px]">
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-3 flex-1 min-w-0">
+                      <span className="text-2xl font-display font-bold text-white/40 min-w-[32px]">
                         {driver.position}
                       </span>
-                      <div className="flex-1">
+                      <DriverAvatar
+                        driverId={driver.Driver.driverId}
+                        givenName={driver.Driver.givenName}
+                        familyName={driver.Driver.familyName}
+                        code={driver.Driver.code}
+                        number={driver.Driver.permanentNumber}
+                        teamColor={getTeamColor(
+                          driver.Constructors[driver.Constructors.length - 1]?.constructorId || ""
+                        )}
+                      />
+                      <div className="flex-1 min-w-0">
                           <div className="font-semibold text-base sm:text-lg leading-tight">
                           {driver.Driver.givenName} {driver.Driver.familyName}
                         </div>
-                        <div className="text-sm text-white/60">
-                          {driver.Constructors[0]?.name || "Unknown"}
+                        <div className="text-sm text-white/60 truncate">
+                          {driver.Constructors[driver.Constructors.length - 1]?.name || "Unknown"}
                         </div>
                       </div>
                     </div>
-                    <div className="text-right">
+                    <div className="text-right shrink-0">
                       <div className="text-xl font-display font-bold text-f1-red">
                         {driver.points}
                       </div>
@@ -190,14 +203,11 @@ export default function StandingsPageContent({
                         </td>
                         <td className="py-4 px-4">
                           <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-f1-red/30 to-f1-red/10 flex items-center justify-center font-display font-bold text-xs">
-                              {constructor.Constructor.name
-                                .split(" ")
-                                .map((n) => n[0])
-                                .join("")
-                                .slice(0, 2)
-                                .toUpperCase()}
-                            </div>
+                            <TeamBadge
+                              constructorId={constructor.Constructor.constructorId}
+                              name={constructor.Constructor.name}
+                              size="sm"
+                            />
                             <div>
                               <div className="font-semibold text-lg">
                                 {constructor.Constructor.name}
