@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Calendar, MapPin } from "lucide-react";
+import { X, Calendar, MapPin, Flag } from "lucide-react";
 import type { Race } from "@/lib/types";
 import { formatRaceDate } from "@/lib/date-utils";
-import { getCircuitImageUrl, DEFAULT_CIRCUIT_IMAGE } from "@/lib/circuit-images";
+import { getCircuitImageUrl } from "@/lib/circuit-images";
 import CircuitInfo from "@/components/CircuitInfo";
 
 interface CircuitModalProps {
@@ -15,11 +15,10 @@ interface CircuitModalProps {
 
 export default function CircuitModal({ race, onClose }: CircuitModalProps) {
   const [imgError, setImgError] = useState(false);
-  const imageUrl = race
-    ? imgError
-      ? DEFAULT_CIRCUIT_IMAGE
-      : getCircuitImageUrl(race.circuitName)
-    : "";
+  const imageUrl =
+    race && !imgError
+      ? getCircuitImageUrl(race.circuitName, race.circuitId)
+      : null;
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -66,37 +65,48 @@ export default function CircuitModal({ race, onClose }: CircuitModalProps) {
             type="button"
             onClick={onClose}
             className="absolute top-3 right-3 z-20 p-2 rounded-full bg-black/60 hover:bg-f1-red text-white transition-colors border border-white/10"
-            aria-label="Kapat"
+            aria-label="Close"
           >
             <X size={20} />
           </button>
 
-          {/* Left: Circuit image */}
-          <div className="relative w-full lg:w-[45%] min-h-[200px] lg:min-h-full aspect-[16/10] lg:aspect-auto lg:min-h-[400px]">
-            <img
-              src={imageUrl}
-              alt={race.circuitName}
-              className="absolute inset-0 w-full h-full object-cover"
-              onError={() => setImgError(true)}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent lg:bg-gradient-to-r lg:from-transparent lg:via-black/20 lg:to-black/90" />
-            <div className="absolute bottom-0 left-0 right-0 p-4 lg:p-6">
+          {/* Left: Circuit track map */}
+          <div className="relative w-full lg:w-[45%] shrink-0 flex flex-col bg-gradient-to-br from-f1-red/15 via-black to-black border-b lg:border-b-0 lg:border-r border-white/10">
+            <div className="track-grid relative h-48 sm:h-56 lg:h-auto lg:flex-1 lg:min-h-[300px]">
+              {imageUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={imageUrl}
+                  alt={`${race.circuitName} track layout`}
+                  className="absolute inset-0 w-full h-full object-contain p-6 sm:p-8"
+                  onError={() => setImgError(true)}
+                />
+              ) : (
+                <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-white/25">
+                  <Flag size={56} />
+                  <span className="text-xs uppercase tracking-widest">
+                    Track map unavailable
+                  </span>
+                </div>
+              )}
+            </div>
+            <div className="p-4 lg:p-6 pr-14 lg:pr-6">
               <span className="inline-block px-2.5 py-1 rounded text-xs font-bold bg-f1-red text-white uppercase tracking-wider">
                 Round {race.round}
               </span>
-              <h2 className="text-2xl lg:text-3xl font-display font-bold text-white mt-2 drop-shadow-lg">
+              <h2 className="text-2xl lg:text-3xl font-display font-bold text-white mt-2 leading-tight">
                 {race.raceName}
               </h2>
-              <p className="text-white/80 text-sm mt-1">{race.circuitName}</p>
+              <p className="text-white/70 text-sm mt-1">{race.circuitName}</p>
             </div>
           </div>
 
           {/* Right: Details */}
-          <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 flex flex-col">
+          <div className="flex-1 min-h-0 overflow-y-auto p-4 sm:p-6 lg:p-8 flex flex-col">
             <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-white/80 mb-6 pb-6 border-b border-white/10">
               <span className="flex items-center gap-2">
                 <MapPin size={16} className="text-f1-red shrink-0" />
-                {race.country}
+                {race.locality ? `${race.locality}, ${race.country}` : race.country}
               </span>
               <span className="flex items-center gap-2">
                 <Calendar size={16} className="text-f1-red shrink-0" />
@@ -111,6 +121,9 @@ export default function CircuitModal({ race, onClose }: CircuitModalProps) {
               <CircuitInfo
                 circuitName={race.circuitName}
                 country={race.country}
+                circuitId={race.circuitId}
+                lat={race.lat}
+                long={race.long}
                 variant="compact"
               />
             </div>
