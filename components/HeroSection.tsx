@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { Calendar, MapPin, Clock } from "lucide-react";
 import type { NextRace } from "@/lib/types";
+import { useMounted } from "@/lib/use-mounted";
 
 interface HeroSectionProps {
   nextRace: NextRace | null;
@@ -12,6 +13,7 @@ interface HeroSectionProps {
 
 export default function HeroSection({ nextRace, season }: HeroSectionProps) {
   const seasonYear = season ?? new Date().getFullYear();
+  const mounted = useMounted();
   const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
   useEffect(() => {
@@ -189,17 +191,20 @@ export default function HeroSection({ nextRace, season }: HeroSectionProps) {
                 month: "long",
                 day: "numeric",
                 year: "numeric",
+                ...(mounted ? {} : { timeZone: "UTC" }),
               })}
             </span>
           </div>
           <div className="flex items-center gap-2">
             <Clock size={18} />
             <span className="text-sm">
-              {raceDate.toLocaleTimeString("en-US", {
-                hour: "2-digit",
-                minute: "2-digit",
-                hour12: false,
-              })}
+              {mounted
+                ? `${raceDate.toLocaleTimeString("en-US", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    hour12: false,
+                  })} local time`
+                : "--:--"}
             </span>
           </div>
         </motion.div>
