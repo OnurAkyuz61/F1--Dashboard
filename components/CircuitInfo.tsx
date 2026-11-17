@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { MapPin, Gauge, RotateCcw, Cloud, Thermometer, Loader2 } from "lucide-react";
 import { getCircuitData } from "@/lib/circuit-data";
+import { getCircuitImageUrl } from "@/lib/circuit-images";
 import { getTrackWeather, type WeatherData } from "@/lib/weather";
 
 interface CircuitInfoProps {
@@ -32,6 +33,7 @@ export default function CircuitInfo({
 
   // Get static circuit data
   const circuitData = getCircuitData(circuitName, circuitId);
+  const trackMapUrl = getCircuitImageUrl(circuitName, circuitId);
   const latitude = lat ?? circuitData?.latitude;
   const longitude = long ?? circuitData?.longitude;
 
@@ -167,6 +169,22 @@ export default function CircuitInfo({
         <h3 className="text-xl sm:text-2xl font-display font-bold">Circuit Details</h3>
         <MapPin className="text-f1-red" size={24} />
       </div>
+
+      {trackMapUrl && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.96 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.2, duration: 0.5 }}
+          className="track-grid relative mb-4 h-36 sm:h-40 rounded-xl border border-white/10 bg-black/30 overflow-hidden"
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={trackMapUrl}
+            alt={`${circuitName} track layout`}
+            className="absolute inset-0 w-full h-full object-contain p-3"
+          />
+        </motion.div>
+      )}
 
       <div className="space-y-3">
         {infoItems.map((item, index) => (
