@@ -7,6 +7,7 @@ import Navbar from "@/components/Navbar";
 import CircuitModal from "@/components/CircuitModal";
 import type { Race } from "@/lib/types";
 import { formatRaceDate, getRaceDateObject } from "@/lib/date-utils";
+import { useMounted } from "@/lib/use-mounted";
 
 interface RacesPageContentProps {
   raceSchedule: Race[];
@@ -20,6 +21,8 @@ export default function RacesPageContent({
   const now = new Date();
   const allRaces = [...raceSchedule].sort((a, b) => a.round - b.round);
   const [selectedRace, setSelectedRace] = useState<Race | null>(null);
+  const mounted = useMounted();
+  const season = allRaces[0]?.season ?? now.getFullYear();
 
   return (
     <main className="min-h-screen">
@@ -33,7 +36,7 @@ export default function RacesPageContent({
         >
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold mb-2">Race Schedule</h1>
           <p className="text-white/60">
-            {new Date().getFullYear()} Formula 1 World Championship
+            {season} Formula 1 World Championship · tap a race for circuit details
           </p>
         </motion.div>
 
@@ -42,7 +45,9 @@ export default function RacesPageContent({
             const raceDateObj = getRaceDateObject(race.date, race.time);
             const isPast = raceDateObj ? raceDateObj < now : false;
             const winner = winnersByRaceName[race.raceName];
-            const formattedDateTime = formatRaceDate(race.date, race.time);
+            const formattedDateTime = formatRaceDate(race.date, race.time, {
+              local: mounted,
+            });
 
             return (
               <motion.div

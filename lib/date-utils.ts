@@ -6,7 +6,12 @@
  * @param time - Time string in format "HH:MM:SSZ" or "HH:MM:SS" (optional)
  * @returns Formatted date string in format "MMM dd, yyyy • HH:mm" or "MMM dd, yyyy"
  */
-export function formatRaceDate(date: string, time?: string): string {
+export function formatRaceDate(
+  date: string,
+  time?: string,
+  options: { local?: boolean } = {}
+): string {
+  const local = options.local ?? true;
   try {
     // Combine date and time into ISO string
     const timeStr = time ? (time.endsWith("Z") ? time : `${time}Z`) : "00:00:00Z";
@@ -20,10 +25,14 @@ export function formatRaceDate(date: string, time?: string): string {
 
     // Format date part: "MMM dd, yyyy"
     // Use Intl.DateTimeFormat for more control
+    // Without a time (or before hydration) format the calendar date in UTC so
+    // it never shifts a day depending on the viewer's timezone.
+    const useLocal = local && Boolean(time);
     const dateFormatter = new Intl.DateTimeFormat("en-US", {
       month: "short",
       day: "numeric",
       year: "numeric",
+      ...(useLocal ? {} : { timeZone: "UTC" }),
     });
     const parts = dateFormatter.formatToParts(dateObj);
     const month = parts.find(p => p.type === "month")?.value || "";
@@ -32,7 +41,7 @@ export function formatRaceDate(date: string, time?: string): string {
     const datePart = `${month} ${day}, ${year}`;
 
     // If time is provided, add time part: " • HH:mm"
-    if (time) {
+    if (time && useLocal) {
       const timePart = dateObj.toLocaleTimeString("en-US", {
         hour: "2-digit",
         minute: "2-digit",

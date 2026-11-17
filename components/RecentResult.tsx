@@ -61,10 +61,11 @@ export default function RecentResult({ lastRace }: RecentResultProps) {
               <div className="flex items-center gap-2 text-white/60">
                 <Calendar size={16} />
                 <span className="text-sm">
-                  {new Date(lastRace.date).toLocaleDateString("en-US", {
+                  {new Date(`${lastRace.date}T00:00:00Z`).toLocaleDateString("en-US", {
                     month: "long",
                     day: "numeric",
                     year: "numeric",
+                    timeZone: "UTC",
                   })}
                 </span>
               </div>
