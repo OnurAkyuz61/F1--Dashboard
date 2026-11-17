@@ -31,6 +31,7 @@ export default function StandingsCard({
   round,
 }: StandingsCardProps) {
   const topThree = standings.slice(0, 3);
+  const chasing = standings.slice(3, 8);
   const standingsLabel =
     round != null
       ? `Round ${round} · ${season} Season`
@@ -109,6 +110,38 @@ export default function StandingsCard({
           </motion.div>
         ))}
       </div>
+
+      {chasing.length > 0 && (
+        <div className="mt-4 divide-y divide-white/5 rounded-xl border border-white/10 bg-white/[0.03]">
+          {chasing.map((driver, i) => {
+            const team = driver.Constructors[driver.Constructors.length - 1];
+            return (
+              <motion.div
+                key={driver.Driver.driverId}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.35 + i * 0.05 }}
+                className="flex items-center gap-3 px-3 sm:px-4 py-2.5"
+              >
+                <span className="w-6 text-sm font-display font-bold text-white/40">
+                  {driver.position}
+                </span>
+                <span
+                  className="w-1 h-5 rounded-full shrink-0"
+                  style={{ background: getTeamColor(team?.constructorId || "") }}
+                />
+                <span className="flex-1 min-w-0 truncate text-sm font-medium">
+                  {driver.Driver.givenName} {driver.Driver.familyName}
+                  <span className="hidden sm:inline text-white/40"> · {team?.name}</span>
+                </span>
+                <span className="text-sm font-display font-bold text-white/80">
+                  {driver.points}
+                </span>
+              </motion.div>
+            );
+          })}
+        </div>
+      )}
 
       <motion.div
         initial={{ opacity: 0 }}
