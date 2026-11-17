@@ -18,6 +18,10 @@ export const TEAM_LOGOS: Record<string, string> = {
   aston_martin: "/teams/aston-martin-alt-svgrepo-com.svg",
 };
 
+// Logos drawn in plain black — rendered white so they show on the dark UI.
+// Full-color logos (Ferrari, Red Bull) keep their original colors.
+const MONOCHROME_LOGOS = new Set(["mercedes", "mclaren", "aston_martin"]);
+
 // Team colors keyed by Jolpi/Ergast constructorId (2026 grid + recent teams)
 const TEAM_COLORS_BY_ID: Record<string, string> = {
   mercedes: "#27F4D2",
@@ -75,6 +79,11 @@ export function getDriverImage(driverId: string): string | null {
 /** Team logo URL, or null when we don't ship one. */
 export function getTeamLogo(constructorId: string): string | null {
   return TEAM_LOGOS[resolveTeamId(constructorId)] || null;
+}
+
+/** True when the team's logo is a black-only SVG that needs inverting. */
+export function isMonochromeLogo(constructorId: string): boolean {
+  return MONOCHROME_LOGOS.has(resolveTeamId(constructorId));
 }
 
 /** Short team monogram, e.g. "Red Bull" → "RB", "Mercedes" → "ME". */

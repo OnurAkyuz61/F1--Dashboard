@@ -1,7 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { getTeamColor, getTeamLogo, getTeamMonogram } from "@/lib/image-map";
+import {
+  getTeamColor,
+  getTeamLogo,
+  getTeamMonogram,
+  isMonochromeLogo,
+} from "@/lib/image-map";
 
 interface TeamBadgeProps {
   constructorId: string;
@@ -40,7 +45,9 @@ export default function TeamBadge({
         <img
           src={logo}
           alt={`${name} logo`}
-          className="w-3/5 h-3/5 object-contain brightness-0 invert"
+          className={`w-4/5 h-4/5 object-contain ${
+            isMonochromeLogo(constructorId) ? "brightness-0 invert" : ""
+          }`}
           onError={() => setFailed(true)}
         />
       ) : (
