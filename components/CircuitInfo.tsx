@@ -124,17 +124,17 @@ export default function CircuitInfo({
   if (variant === "compact") {
     return (
       <div className="space-y-2">
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           {infoItems.map((item) => (
             <div
               key={item.label}
-              className="flex items-center justify-between rounded-lg bg-white/5 border border-white/10 px-3 py-2.5"
+              className="flex items-center justify-between gap-3 rounded-lg bg-white/5 border border-white/10 px-3 py-2.5"
             >
               <span className="text-xs uppercase tracking-wider text-white/50 flex items-center gap-2">
                 {item.icon}
                 {item.label}
               </span>
-              <span className="font-semibold text-sm flex items-center gap-1.5">
+              <span className="font-semibold text-sm flex items-center gap-1.5 text-right">
                 {item.isLoading ? (
                   <Loader2 size={14} className="animate-spin text-f1-red" />
                 ) : (
@@ -204,7 +204,7 @@ export default function CircuitInfo({
                 {item.label}
               </span>
             </div>
-            <span className="font-semibold text-sm sm:text-base lg:text-lg flex items-center gap-2 shrink-0">
+            <span className="font-semibold text-sm sm:text-base text-right flex items-center justify-end gap-2 min-w-0 break-words">
               {item.isLoading ? (
                 <Loader2 size={16} className="animate-spin text-f1-red" />
               ) : (
