@@ -2,7 +2,10 @@
 
 import { motion } from "framer-motion";
 import { Trophy, TrendingUp } from "lucide-react";
+import Link from "next/link";
 import type { DriverStanding } from "@/lib/types";
+import DriverAvatar from "@/components/DriverAvatar";
+import { getTeamColor } from "@/lib/image-map";
 
 interface StandingsCardProps {
   standings: DriverStanding[];
@@ -48,6 +51,10 @@ export default function StandingsCard({
         <TrendingUp className="text-f1-red" size={24} />
       </div>
 
+      {topThree.length === 0 && (
+        <p className="text-sm text-white/50">Standings are unavailable right now.</p>
+      )}
+
       <div className="space-y-4">
         {topThree.map((driver, index) => (
           <motion.div
@@ -72,12 +79,23 @@ export default function StandingsCard({
                   </span>
                   {podiumIcons[index]}
                 </div>
+                <DriverAvatar
+                  driverId={driver.Driver.driverId}
+                  givenName={driver.Driver.givenName}
+                  familyName={driver.Driver.familyName}
+                  code={driver.Driver.code}
+                  number={driver.Driver.permanentNumber}
+                  teamColor={getTeamColor(
+                    driver.Constructors[driver.Constructors.length - 1]?.constructorId || ""
+                  )}
+                  className="hidden sm:flex"
+                />
                 <div className="min-w-0">
                   <h4 className="font-semibold text-base sm:text-lg leading-tight break-words">
                     {driver.Driver.givenName} {driver.Driver.familyName}
                   </h4>
                   <p className="text-xs sm:text-sm text-white/60 break-words">
-                    {driver.Constructors[0]?.name || "Unknown"}
+                    {driver.Constructors[driver.Constructors.length - 1]?.name || "Unknown"}
                   </p>
                 </div>
               </div>
@@ -98,12 +116,12 @@ export default function StandingsCard({
         transition={{ delay: 0.4 }}
         className="mt-6 pt-4 border-t border-white/10"
       >
-        <a
+        <Link
           href="/standings"
           className="text-sm text-f1-red hover:text-f1-red-dark transition-colors font-medium"
         >
           View Full Standings →
-        </a>
+        </Link>
       </motion.div>
     </motion.div>
   );
