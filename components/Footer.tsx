@@ -22,8 +22,9 @@ export default function Footer() {
 
           {/* Center - Data Disclaimer */}
           <div className="text-xs text-white/40 text-center max-w-2xl">
-            Data provided by Jolpi/Ergast API. F1, FORMULA 1, and related marks
-            are trademarks of Formula One Licensing BV.
+            Data provided by Jolpi/Ergast API. Track maps from bacinger/f1-circuits
+            (MIT). F1, FORMULA 1, and related marks are trademarks of Formula One
+            Licensing BV.
           </div>
 
           {/* Right - Credits */}
