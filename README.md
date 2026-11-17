@@ -10,7 +10,7 @@
   [![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-38bdf8?style=flat-square&logo=tailwind-css)](https://tailwindcss.com/)
   [![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
   
-  [Live Demo](#) • [Documentation](#documentation) • [Report Bug](#) • [Request Feature](#)
+  [Live Demo](https://f1-dashboard.onurakyuz.com.tr) • [Documentation](#documentation) • [Report Bug](#) • [Request Feature](#)
 </div>
 
 ---
@@ -34,7 +34,7 @@
 
 F1 Dashboard is a comprehensive Formula 1 statistics and information platform that provides real-time data about drivers, teams, races, and standings. Built with modern web technologies, it offers a sleek, dark-themed interface with glassmorphism effects and smooth animations.
 
-The application fetches live data from the [Ergast F1 API](http://ergast.com/mrd/) via the [Jolpi mirror](https://api.jolpi.ca/ergast/f1), ensuring up-to-date information about the current and previous Formula 1 seasons.
+The application fetches live data from the [Ergast F1 API](http://ergast.com/mrd/) via the [Jolpi mirror](https://api.jolpi.ca/ergast/f1), ensuring up-to-date information about the current Formula 1 season (2026 grid, including Audi and Cadillac).
 
 ## ✨ Features
 
@@ -43,7 +43,10 @@ The application fetches live data from the [Ergast F1 API](http://ergast.com/mrd
 - **Driver Standings**: Complete driver rankings with points, wins, and team information
 - **Constructor Standings**: Team rankings and statistics
 - **Race Schedule**: Full season calendar with past and upcoming races
-- **Race Results**: Detailed results from the most recent Grand Prix
+- **Race Results**: Podium (P1–P3) from the most recent Grand Prix
+- **Circuit Details**: Track map, length, laps, lap record and live track weather for every circuit
+- **Race Details Modal**: Tap any race for its track layout, local start time and circuit specs
+- **Teams Overview**: Team-colored cards with points-vs-leader bar and each team's drivers
 - **Statistics Dashboard**: Comprehensive season statistics and insights
 
 ### 🎨 User Experience
@@ -51,13 +54,15 @@ The application fetches live data from the [Ergast F1 API](http://ergast.com/mrd
 - **Dark Theme**: Eye-friendly dark mode with F1 Red accents
 - **Glassmorphism UI**: Modern frosted glass effects throughout the interface
 - **Smooth Animations**: Framer Motion powered transitions and interactions
-- **Fast Performance**: Server-side rendering with 1-hour data caching
+- **Fast Performance**: Server-side rendering with 5-minute data revalidation
+- **Local Times**: Race times shown in the visitor's timezone, without hydration mismatches
+- **No Broken Images**: Every visual is local or generated, with graceful fallbacks
 
 ### 📊 Data Visualization
-- **Driver Cards**: Beautiful card-based layout inspired by formula1.com
-- **Team Colors**: Dynamic color coding based on team branding
+- **Driver Cards**: Card layout inspired by formula1.com with illustrated team-color helmets
+- **Track Maps**: Generated SVG layouts for all 2026 circuits
+- **Team Colors**: Dynamic color coding by constructor
 - **Podium Highlights**: Special styling for top 3 positions
-- **Interactive Tables**: Sortable and filterable data tables
 
 ## 🛠 Tech Stack
 
@@ -74,21 +79,23 @@ The application fetches live data from the [Ergast F1 API](http://ergast.com/mrd
 
 ### API
 - **Data Source**: [Ergast F1 API](http://ergast.com/mrd/) via [Jolpi Mirror](https://api.jolpi.ca/ergast/f1)
-- **Caching**: Next.js built-in caching with 1-hour revalidation
+- **Caching**: Next.js built-in caching with 5-minute revalidation
+- **Weather**: [Open-Meteo](https://open-meteo.com) (free, no API key)
+- **Track geometry**: [bacinger/f1-circuits](https://github.com/bacinger/f1-circuits) (MIT)
 
 ## 📸 Screenshots
 
 ### Home Dashboard
-The main dashboard features a hero section with the next race countdown, top driver standings, circuit information, and recent race results.
+The main dashboard features a hero with the next Grand Prix name and countdown over its track map, the top-8 driver standings, circuit details with track layout and live weather, and the last race podium.
 
 ### Standings Page
-Comprehensive driver and constructor standings with beautiful card-based layouts and detailed statistics.
+Driver cards with illustrated team-color helmets, plus a constructor table with team badges.
 
 ### Races Page
-Complete race schedule showing past races with winners and upcoming races with countdown timers.
+Full season calendar with track thumbnails, winners for completed races and a highlighted next race. Tap a race to open its circuit details.
 
 ### Teams Page
-Grid layout showcasing all Formula 1 teams with their points, wins, and positions.
+Team-colored cards with logo or monogram, points-vs-leader bar, wins and the team's drivers.
 
 ## 🚀 Getting Started
 
@@ -150,7 +157,8 @@ f1-web/
 │   ├── HeroSection.tsx          # Next race countdown hero
 │   ├── StandingsCard.tsx        # Top 3 drivers card
 │   ├── DriverCard.tsx           # Individual driver card (F1.com style)
-│   ├── DriverAvatar.tsx         # Driver photo or team-colored number tile
+│   ├── DriverAvatar.tsx         # Driver photo, helmet or code avatar
+│   ├── DriverHelmet.tsx         # Illustrated team-color helmet (SVG)
 │   ├── TeamBadge.tsx            # Team logo or team-colored monogram
 │   ├── CircuitInfo.tsx          # Circuit details widget + track map
 │   ├── CircuitModal.tsx         # Race/circuit detail modal
@@ -192,15 +200,18 @@ The application uses the **Ergast F1 API** via the Jolpi HTTPS mirror for reliab
 
 ### API Endpoints Used
 
-- `GET /{season}/driverStandings.json` - Driver championship standings
-- `GET /{season}/constructorStandings.json` - Constructor championship standings
-- `GET /{season}/next.json` - Next upcoming race
-- `GET /{season}.json` - Full race schedule
-- `GET /{season}/last/results.json` - Last race results
+- `GET /current/driverStandings.json` - Driver championship standings
+- `GET /current/constructorStandings.json` - Constructor championship standings
+- `GET /current.json` - Full race schedule (next race is derived from it)
+- `GET /current/last/results.json` - Last race results
+- `GET /current/results/1.json` - Winners of completed races
+
+Each race also carries its `circuitId` and coordinates, which drive the track
+maps and the weather lookup.
 
 ### Data Caching
 
-All API requests are cached for **1 hour** using Next.js's built-in caching mechanism (`revalidate: 3600`). This ensures:
+All API requests are revalidated every **5 minutes** using Next.js's built-in caching mechanism (`revalidate: 300`). This ensures:
 - Fast page loads
 - Reduced API rate limiting
 - Better user experience
@@ -214,9 +225,8 @@ The application includes robust error handling:
 
 ### Season Logic
 
-- **Standings**: Uses 2025 season (last completed season)
-- **Next Race**: Uses 2026 season (current/upcoming season)
-- **Race Schedule**: Uses 2026 season
+All data uses Jolpi's `current` endpoints, so standings, schedule and results
+follow the live season automatically — no year needs to be changed in code.
 
 ## 🎨 Design System
 
@@ -244,9 +254,12 @@ Each team has its color (2026 grid, keyed by constructorId in `lib/image-map.ts`
 - **Track maps** live in `public/circuits/<circuitId>.svg` and are generated by
   `node scripts/generate-circuit-svgs.mjs` from
   [bacinger/f1-circuits](https://github.com/bacinger/f1-circuits) (MIT).
+- **Driver visuals** are original illustrated helmets (`components/DriverHelmet.tsx`)
+  in the team's color with the race number and driver code — a generic design,
+  not any driver's real helmet livery.
 - **Driver photos** are optional: add a licensed image to `public/drivers/` and
-  register it in `DRIVER_IMAGES`. Without one, drivers get a team-colored
-  number/code avatar, so nothing renders as a broken image.
+  register it in `DRIVER_IMAGES` (`lib/image-map.ts`); it then replaces the
+  helmet. If it fails to load, the helmet is shown instead.
 - **Team logos** missing from `public/teams/` fall back to a team-colored monogram.
 
 ### Typography
@@ -272,7 +285,7 @@ Each team has its color (2026 grid, keyed by constructorId in `lib/image-map.ts`
 ### Other Platforms
 
 The application can be deployed on any platform that supports Next.js:
-- **Netlify**: Use the Next.js build preset
+- **Netlify**: Use the Next.js build preset (the live demo runs on Netlify)
 - **AWS Amplify**: Configure for Next.js SSR
 - **Docker**: Build and run in a container
 
