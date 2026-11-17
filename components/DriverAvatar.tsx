@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { getDriverCode, getDriverImage } from "@/lib/image-map";
+import DriverHelmet from "@/components/DriverHelmet";
 
 interface DriverAvatarProps {
   driverId: string;
@@ -75,17 +76,13 @@ export default function DriverAvatar({
           onError={() => setFailed(true)}
         />
       ) : (
-        <div className="absolute inset-0 flex flex-col items-center justify-center" aria-label={fullName} role="img">
-          <span
-            className="font-display font-black text-5xl md:text-6xl leading-none"
-            style={{ color: teamColor, textShadow: `0 0 24px ${teamColor}55` }}
-          >
-            {number || "–"}
-          </span>
-          <span className="mt-2 font-display font-bold text-xs tracking-[0.3em] text-white/70">
-            {driverCode}
-          </span>
-        </div>
+        <DriverHelmet
+          teamColor={teamColor}
+          number={number}
+          code={driverCode}
+          title={fullName}
+          className="absolute inset-0 w-full h-full p-2"
+        />
       )}
     </div>
   );
