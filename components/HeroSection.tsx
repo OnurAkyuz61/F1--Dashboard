@@ -75,7 +75,7 @@ export default function HeroSection({ nextRace, season }: HeroSectionProps) {
       >
         <div className="absolute inset-0 bg-gradient-to-br from-f1-red/20 via-background to-background" />
         <div className="relative z-10 text-center">
-          <h2 className="text-5xl md:text-7xl font-display font-bold mb-4 bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent">
+          <h2 className="text-5xl md:text-7xl font-display font-bold mb-4 pb-2 leading-[1.2] bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent">
             NO UPCOMING RACES
           </h2>
           <p className="text-xl text-white/60">
@@ -102,7 +102,7 @@ export default function HeroSection({ nextRace, season }: HeroSectionProps) {
       >
         <div className="absolute inset-0 bg-gradient-to-br from-f1-red/20 via-background to-background" />
         <div className="relative z-10 text-center">
-          <h2 className="text-5xl md:text-7xl font-display font-bold mb-4 bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent">
+          <h2 className="text-5xl md:text-7xl font-display font-bold mb-4 pb-2 leading-[1.2] bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent">
             RACE DATE TBA
           </h2>
           <p className="text-xl text-white/60">Race information will be available soon</p>
@@ -156,7 +156,7 @@ export default function HeroSection({ nextRace, season }: HeroSectionProps) {
             initial={{ scale: 0.9 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.4, type: "spring", stiffness: 200 }}
-            className="text-3xl sm:text-5xl md:text-6xl font-display font-bold mb-4 leading-tight bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent"
+            className="text-3xl sm:text-5xl md:text-6xl font-display font-bold mb-2 pb-2 leading-[1.2] bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent"
           >
             {nextRace.raceName}
           </motion.h2>
