@@ -80,7 +80,7 @@ export default function RecentResult({ lastRace }: RecentResultProps) {
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.2 + i * 0.1, duration: 0.4 }}
-                className={`glass rounded-xl p-4 border ${podium[i].ring} flex sm:flex-col items-center sm:items-start gap-3`}
+                className={`glass rounded-xl p-4 border ${podium[i].ring} flex flex-col gap-3`}
               >
                 <div className="flex items-center gap-3 w-full">
                   <DriverAvatar
