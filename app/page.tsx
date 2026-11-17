@@ -43,6 +43,9 @@ export default async function Home() {
               <CircuitInfo
                 circuitName={nextRace.circuitName}
                 country={nextRace.country}
+                circuitId={nextRace.circuitId}
+                lat={nextRace.lat}
+                long={nextRace.long}
               />
             ) : (
               <CircuitInfo circuitName="TBA" country="TBA" />
