@@ -61,7 +61,7 @@ export default function CircuitInfo({
           setWeatherError(true);
         }
       } catch (error) {
-        console.error("Failed to fetch weather:", error);
+        console.warn("Weather unavailable:", error);
         if (!cancelled) setWeatherError(true);
       } finally {
         if (!cancelled) setWeatherLoading(false);

@@ -69,7 +69,7 @@ export async function getTrackWeather(
       conditionCode: weather.weathercode,
     };
   } catch (error) {
-    console.error(`[getTrackWeather] Failed to fetch weather:`, error);
+    console.warn(`[getTrackWeather] Weather unavailable:`, error);
     return null;
   }
 }
