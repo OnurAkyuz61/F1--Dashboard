@@ -8,6 +8,7 @@ import CircuitModal from "@/components/CircuitModal";
 import type { Race } from "@/lib/types";
 import { formatRaceDate, getRaceDateObject } from "@/lib/date-utils";
 import { useMounted } from "@/lib/use-mounted";
+import { getCircuitImageUrl } from "@/lib/circuit-images";
 
 interface RacesPageContentProps {
   raceSchedule: Race[];
@@ -23,6 +24,10 @@ export default function RacesPageContent({
   const [selectedRace, setSelectedRace] = useState<Race | null>(null);
   const mounted = useMounted();
   const season = allRaces[0]?.season ?? now.getFullYear();
+  const nextRound = allRaces.find((r) => {
+    const d = getRaceDateObject(r.date, r.time);
+    return d ? d >= now : false;
+  })?.round;
 
   return (
     <main className="min-h-screen">
@@ -48,6 +53,8 @@ export default function RacesPageContent({
             const formattedDateTime = formatRaceDate(race.date, race.time, {
               local: mounted,
             });
+            const isNext = race.round === nextRound;
+            const trackMapUrl = getCircuitImageUrl(race.circuitName, race.circuitId);
 
             return (
               <motion.div
@@ -66,8 +73,9 @@ export default function RacesPageContent({
                 }}
                 className={`
                   glass-strong rounded-2xl p-4 sm:p-6 cursor-pointer
-                  ${isPast ? "opacity-75" : ""}
-                  hover:scale-[1.02] transition-transform
+                  ${isPast ? "opacity-75 hover:opacity-100" : ""}
+                  ${isNext ? "ring-2 ring-f1-red shadow-lg shadow-f1-red/20" : ""}
+                  hover:scale-[1.02] transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-white
                 `}
               >
                 <div className="flex items-start justify-between mb-4">
@@ -81,12 +89,28 @@ export default function RacesPageContent({
                     <span className="px-3 py-1 rounded-full bg-white/10 text-white/60 text-xs font-semibold uppercase tracking-wider border border-white/20">
                       Completed
                     </span>
+                  ) : isNext ? (
+                    <span className="px-3 py-1 rounded-full bg-f1-red text-white text-xs font-semibold uppercase tracking-wider">
+                      Next
+                    </span>
                   ) : (
                     <span className="px-3 py-1 rounded-full bg-f1-red/20 text-f1-red text-xs font-semibold uppercase tracking-wider">
                       Upcoming
                     </span>
                   )}
                 </div>
+
+                {trackMapUrl && (
+                  <div className="track-grid relative h-28 mb-4 rounded-xl bg-black/30 border border-white/10 overflow-hidden">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={trackMapUrl}
+                      alt={`${race.circuitName} track layout`}
+                      loading="lazy"
+                      className="absolute inset-0 w-full h-full object-contain p-3"
+                    />
+                  </div>
+                )}
 
                 <h3 className="text-xl sm:text-2xl font-display font-bold mb-2 leading-tight">
                   {race.raceName}
