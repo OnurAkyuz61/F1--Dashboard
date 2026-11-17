@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { Calendar, MapPin, Clock } from "lucide-react";
 import type { NextRace } from "@/lib/types";
 import { useMounted } from "@/lib/use-mounted";
+import { getCircuitImageUrl } from "@/lib/circuit-images";
 
 interface HeroSectionProps {
   nextRace: NextRace | null;
@@ -14,6 +15,9 @@ interface HeroSectionProps {
 export default function HeroSection({ nextRace, season }: HeroSectionProps) {
   const seasonYear = season ?? new Date().getFullYear();
   const mounted = useMounted();
+  const trackMapUrl = nextRace
+    ? getCircuitImageUrl(nextRace.circuitName, nextRace.circuitId)
+    : null;
   const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
   useEffect(() => {
@@ -124,6 +128,18 @@ export default function HeroSection({ nextRace, season }: HeroSectionProps) {
         />
       </div>
 
+      {trackMapUrl && (
+        <motion.img
+          src={trackMapUrl}
+          alt=""
+          aria-hidden="true"
+          initial={{ opacity: 0, scale: 1.1 }}
+          animate={{ opacity: 0.12, scale: 1 }}
+          transition={{ duration: 1.2, ease: "easeOut" }}
+          className="pointer-events-none absolute inset-0 m-auto w-[90%] h-[90%] max-w-5xl object-contain"
+        />
+      )}
+
       <div className="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
         <motion.div
           initial={{ y: 50, opacity: 0 }}
@@ -131,31 +147,34 @@ export default function HeroSection({ nextRace, season }: HeroSectionProps) {
           transition={{ delay: 0.2, duration: 0.6 }}
           className="text-center mb-10 sm:mb-12"
         >
+          <div className="inline-flex items-center gap-2 mb-4 px-3 py-1 rounded-full bg-f1-red/15 border border-f1-red/40 text-f1-red text-xs font-display font-bold uppercase tracking-[0.2em]">
+            <span className="w-1.5 h-1.5 rounded-full bg-f1-red animate-pulse" />
+            Next Race{nextRace.round ? ` · Round ${nextRace.round}` : ""}
+          </div>
+
           <motion.h2
             initial={{ scale: 0.9 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.4, type: "spring", stiffness: 200 }}
-            className="text-4xl sm:text-5xl md:text-7xl font-display font-bold mb-4 bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent"
+            className="text-3xl sm:text-5xl md:text-6xl font-display font-bold mb-4 leading-tight bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent"
           >
-            NEXT RACE
+            {nextRace.raceName}
           </motion.h2>
-          
-          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 mb-4 text-white/80 px-2">
-            <MapPin size={18} className="shrink-0" />
-            <p className="text-lg sm:text-xl font-medium text-center">{nextRace.circuitName}</p>
-            <span className="hidden sm:inline text-white/40">•</span>
-            <p className="text-base sm:text-lg text-center w-full sm:w-auto">{nextRace.country}</p>
+
+          <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-white/80 px-2">
+            <MapPin size={18} className="shrink-0 text-f1-red" />
+            <p className="text-base sm:text-lg font-medium">{nextRace.circuitName}</p>
+            <span className="text-white/40">•</span>
+            <p className="text-base sm:text-lg text-white/60">
+              {nextRace.locality ? `${nextRace.locality}, ` : ""}
+              {nextRace.country}
+            </p>
           </div>
-          {nextRace.round && (
-            <div className="text-sm text-white/60 mb-8">
-              Round {nextRace.round}
-            </div>
-          )}
         </motion.div>
 
         <motion.div
-          initial={{ x: 100, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
+          initial={{ y: 30, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.6, duration: 0.6, ease: "easeOut" }}
           className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 max-w-4xl mx-auto"
         >
